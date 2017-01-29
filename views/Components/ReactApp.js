@@ -9,7 +9,8 @@ var React = require("react"),
 var ReactApp = React.createClass({
     getInitialState: function() {
         return ({
-            user: {}
+            user: {},
+            auth: ""
         });
     },
     
@@ -20,7 +21,8 @@ var ReactApp = React.createClass({
           cache: false,
           success: function(data) {
             this.setState({
-                user: data
+                user: data,
+                displayName: data.github.displayName
               });
           }.bind(this),
           error: function(xhr, status, err) {
@@ -58,7 +60,7 @@ var ReactApp = React.createClass({
         return (
             <div>
                 <Nav />
-                <Jumbotron username={this.state.user.email}/>
+                <Jumbotron displayName={this.state.displayName}/>
                 <Subotron />
                 <div className="container">{infoNodes}</div>
                 <pre>{user}</pre>

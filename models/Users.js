@@ -5,36 +5,16 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
 
 var User = new Schema({
-	github: {
-		id: String,
-		displayName: String,
-		username: String,
-        publicRepos: Number
-	},
-    google: {
-        id: String,
-        token: String,
+	local:{
+        id: Number,
         email: String,
-        name: String
-    },
-    twitter: {
-        id: String,
-        token: String,
-        displayName: String,
-        username: String
-    },
-    facebook:{
-        id: String,
-        token: String,
-        name: String
-    },
-    local:{
-        email: String,
+        username: String,
         password: String,
-        firstName: String,
-        lastName: String,
-        fullName: String
-    }
+        created: Date,
+        resetPasswordToken: String,
+        resetExpires: Number
+    },
+    citations: [{ type: Schema.Types.ObjectId, ref: 'Citation' }]
 });
 
 User.methods.generateHash = function(password) {

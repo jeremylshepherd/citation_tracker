@@ -7,15 +7,17 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var User = require('../models/Users');
+var Citation = require('../models/Citations');
 var React = require("react");
 var ReactDOMServer = require("react-dom/server");
-var ReactApp = require("../views/Components/ReactApp");
 var passport = require("passport");
+var crypto = require("crypto");
+var nodemailer = require('nodemailer');
 
 require("../config/passport");
 
 /******************************************************************************
-******************--------AUTHENTICATION ROUTES---------***********************
+******************________AUTHENTICATION ROUTES_________***********************
 ******************************************************************************/
 
 //Authentication middleware
@@ -28,59 +30,6 @@ function isLoggedIn(req, res, next) {
     res.redirect('/login');
 }
 
-/******************
-******GITHUB*******
-******************/
-
-router.get('/auth/github', passport.authenticate('github'));
-
-router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/' }),
-    (req, res) => {
-      req.flash('loggedin', "Who's awesome? You're awesome! Thanks for logging in.");
-      res.redirect('/');
-  }
-);
-
-
-/******************
-******GOOGLE*******
-******************/
-
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }),
-    (req, res) => {
-      req.flash('loggedin', "Who's awesome? You're awesome! Thanks for logging in.");
-      res.redirect('/');
-  }
-);
-
-/*****************
-******TWITTER*****
-*****************/
-
-router.get('/auth/twitter', passport.authenticate('twitter'));
-
-router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/' }),
-    function(req, res) {
-      req.flash('loggedin', "Who's awesome? You're awesome! Thanks for logging in.");
-      res.redirect('/');
-  }
-);
-
-/*****************
-*****FACEBOOK*****
-*****************/
-
-router.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
-
-router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }),
-    function(req, res) {
-      req.flash('loggedin', "Who's awesome? You're awesome! Thanks for logging in.");
-      res.redirect('/');
-  }
-);
-
 /*****************
 *******LOCAL******
 *****************/
@@ -92,21 +41,30 @@ router.post('/signup', (req, res) => {
         if(!user) {
             var newUser = new User();
             
-            newUser.local.email = req.body.email;
-            newUser.local.password = newUser.generateHash(req.body.password);
-            newUser.local.firstName= req.body.firstName;
-            newUser.local.lastName = req.body.lastName;
-            newUser.local.fullName = req.body.firstName + " " + req.body.lastName;
-            
-            newUser.save((err) => {
+            User.find({}, (err, users) => {
                 if(err) {console.log(err);}
+                console.log(users.length);
+                newUser.local.email = req.body.email;
+                newUser.local.password = newUser.generateHash(req.body.password);
+                newUser.local.username= req.body.username;
+                newUser.local.created = Date.now();
+                newUser.local.id = +(users.length) + 1;
+                newUser.local.resetPasswordToken = null;
+                newUser.local.resetExpires = null;
+                
+                newUser.save((err) => {
+                    if(err) {console.log(err);}
+                });
+                
+                req.flash('usercreated', 'New user created');
+                req.login(newUser, (err) => {
+                    if(err) {console.log(err);}
+                    return res.redirect('/');
+                });
             });
-            req.flash('usercreated', 'New user created');
-            req.login(newUser, (err) => {
-                if(err) {console.log(err);}
-                return res.redirect('/');
-            })
+            
         }else{
+            
             req.flash('signupMessage', 'Sorry, that user already exists.');
             res.redirect('/login');
         }
@@ -118,42 +76,125 @@ router.post('/signon', passport.authenticate('local', {
         failureRedirect : '/login',
         failureFlash : true
     }));
+    
+router.post('/forgot', (req, res) => {
+   User.findOne({'local.email' : req.body.email}, (err, user) => {
+        if(err){res.json(err);}
+        if(!user) {
+            req.flash('login', 'User does not exist')
+            return res.redirect('/login');
+            
+        }
+       
+        crypto.randomBytes(20, (err, buf) => {
+            if (err) {throw err;}
+            var token =  buf.toString('hex');
+            console.log(token);
+            user.local.resetPasswordToken = token;
+            user.local.resetExpires = Date.now() + 1200000;
+            
+            console.log(user);
+            var link = `${process.env.APP_URL}reset/${token}`;
+            var text = `You (or someone else) requested a password reset. If you did not request this, ignore this email. The reset link will expire in 20 minutes. Otherwise, click the link or copy and paste link into your browser.`;
+            var transport = nodemailer.createTransport("SMTP", {
+                service: 'Gmail',
+                auth: {
+                    user: process.env.EMAIL_ADDRESS, // Your email id
+                    pass: process.env.EMAIL_PASSWORD // Your password
+                }
+            });
+            var date = new Date(Date.now());
+            var dateString = `${date.toLocaleDateString('en-us')} ${date.toLocaleTimeString()}`;
+            var mailOptions = {
+                from: process.env.EMAIL_ADDRESS,
+                to: user.local.email,
+                subject: `Password reset requested at ${dateString}`,
+                text: `${text}  ${link}`,
+                html: `<p>${text}</p><br><a href="${link}">${link}</a>`
+            };
+            transport.sendMail(mailOptions, function(error, info){
+                if(error){
+                    console.log(error);
+                }else{
+                    console.log(JSON.stringify(info, null, 2));
+                }
+            });
+            
+            user.save((err) => {
+                if(err){console.log(err);}
+            });
+            console.log('Password token set.');
+            req.flash('signupMessage', `Your reset link has been sent to ${req.body.email}.`);
+            res.redirect('/login');
+       });
+   }); 
+});
+
+router.get('/reset/:token', (req, res) => {
+  User.findOne({ 'local.resetPasswordToken': req.params.token}, function(err, user) {
+    if(err) {return res.json(err);}
+    if (!user || user.local.resetExpires < Date.now()) {
+      req.flash('login', 'Password reset token is invalid or has expired.');
+      return res.redirect('/login');
+    }
+    req.flash('signupMessage', `Enter your new password and clcik submit, ${user.local.username}`);
+    res.render('reset', {
+      user: req.user
+    });
+  });
+});
+
+router.post('/reset/:token', (req, res) => {
+    User.findOne({'local.resetPasswordToken' : req.params.token}, (err, user) => {
+        if(err) {return res.json(err);}
+        console.log(req.body.password);
+        user.local.password = user.generateHash(req.body.password);
+        user.local.resetPasswordToken = undefined;
+        user.local.resetExpires = undefined;
+        
+        user.save((err) => {
+            if(err) {console.log(err);}
+        });
+        
+        req.flash('usercreated', 'New Password Saved!');
+        req.login(user, (err) => {
+            if(err) {console.log(err);}
+            return res.redirect('/');
+        });
+    });
+});
+
 
 /******************************************************************************
-*****************************Page Routing**************************************
+*****************____________Page Routing____________**************************
 ******************************************************************************/
 
 
 router.get('/', isLoggedIn, (req, res) => {
-    var reactString = ReactDOMServer.renderToString(
-        React.createElement(ReactApp)
-    );
-    res.render('index.ejs', {reactHTML : reactString, user: req.user});
+    res.render('index.ejs');
 });
 
 router.get('/login', (req, res) => {
     res.render('login.ejs');
 });
 
-router.get('/users/:username', isLoggedIn, (req, res) => {
-   User.findOne({'github.username' : req.params.username}, (err, user) => {
-       if(err) {res.json(err);}
-       let obj = {};
-       obj.username = user.github.username;
-       obj.name = user.github.displayName;
-       obj.repos = user.github.publicRepos;
-       res.json(obj);
-   });
-});
-
 router.get('/logout', (req, res) => {
     req.logout();
     req.flash('logout', 'You have successfully logged out!');
-    res.redirect('/');
+    res.redirect('/login');
+});
+
+router.post('/buffer', (req, res) => {
+    var token;
+    crypto.randomBytes(20, (err, buf) => {
+        if (err) throw err;
+        token =  buf.toString('hex');
+        res.json(token);
+    }); 
 });
 
 /******************************************************************************
-******************************API Routing**************************************
+****************______________API Routing______________************************
 ******************************************************************************/
 
 
@@ -165,8 +206,77 @@ router.get('/api/me', isLoggedIn, (req, res) => {
     if(req.user === undefined) {
         res.json({});
     }else{
-        res.json(req.user);
+        var user = {
+            local: {}
+        };
+        user.local.username = req.user.local.username;
+        user.local.email = req.user.local.email;
+        user.local.created = req.user.local.created;
+        user.local.id = req.user.local.id;
+        res.json(user);
     }
+});
+
+router.get('/users/:username', isLoggedIn, (req, res) => {
+   User.findOne({'local.username' : req.params.username}, (err, user) => {
+       if(err) {res.json(err);}
+       if(!user) {return res.json('User does not exist');}
+       Citation.find({'creator' : user._id}, (err, citations) => {
+           if(err) {res.json(err);}
+           let obj = {};
+           obj.username = user.local.username;
+           obj.created = user.local.created;
+           obj.citations = citations;
+           res.json(obj);
+       });
+   });
+});
+
+router.post('/api/new/citation', isLoggedIn, (req, res) => {
+    User.findOne({'_id': req.user._id}, (err, user) => {
+        if(err)  {console.log(err);}
+       
+        var newCite = new Citation({
+            ticket: req.body.ticket,
+            tag: req.body.tag,
+            make: req.body.make,
+            model: req.body.model,
+            year: req.body.year,
+            color: req.body.color,
+            state: req.body.state,
+            violation: req.body.violation,
+            location: req.body.location,
+            date: req.body.date,
+            time:req.body.time,
+            officer :{name: req.body.officer.name, unit: req.body.officer.unit},
+            employee: req.body.employee,
+            creator: user._id
+        });
+        newCite.save((err) => {
+          if(err) {console.log(err);}
+          console.log('Citation saved!');
+          res.json('Citation saved');
+      });
+    });
+});
+
+router.get('/api/citations', (req, res) => {
+    Citation.find({}, (err, results) => {
+       if(err){console.log(err);}
+       res.json(results);
+    });
+});
+
+router.get('/api/citation/:ticket', isLoggedIn, (req, res) => {
+    Citation.findOne({'ticket': req.params.ticket}, (err, ticket) => {
+       if(err){console.log(err);}
+       if(!ticket){return res.re('Ticket not found');}
+       res.json(ticket);
+    });
+});
+
+router.get('*', (req, res) => {
+    res.render('index.ejs');
 });
 
 module.exports = router;

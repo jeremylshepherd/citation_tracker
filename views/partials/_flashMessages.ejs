@@ -1,18 +1,18 @@
 <% if(messages.logout) {%>
-      <div class="alert alert-success" role="alert"><span class="fa fa-thumbs-o-up"></span><%= messages.logout%></div>
+      <div class="alert alert-success col-xs-12" role="alert"><span class="fa fa-thumbs-o-up"></span><%= messages.logout%></div><br/>
 <% } %>
 <% if(messages.loggedin) {%>
-    <div class="alert alert-success" role="alert"><span class="fa fa-hand-spock-o"></span><%= messages.loggedin%></div>
+    <div class="alert alert-success col-xs-12" role="alert"><span class="fa fa-hand-spock-o"></span><%= messages.loggedin%></div><br/>
 <% } %>
 <% if(messages.usercreated) {%>
-    <div class="alert alert-success" role="alert"><span class="fa fa-hand-spock-o"></span><%= messages.usercreated%></div>
+    <div class="alert alert-success col-xs-12" role="alert"><span class="fa fa-hand-spock-o"></span><%= messages.usercreated%></div><br/>
 <% } %>
 <% if(messages.login && !messages.logout) {%>
-    <div class="alert alert-danger" role="alert"><span class="fa fa-hand-stop-o"></span><%= messages.login%></div>
+    <div class="alert alert-danger col-xs-12" role="alert"><span class="fa fa-hand-stop-o"></span><%= messages.login%></div><br/>
 <% } %>
 <% if(messages.loginMessage) {%>
-    <div class="alert alert-danger" role="alert"><span class="fa fa-hand-stop-o"></span><%= messages.loginMessage%></div>
+    <div class="alert alert-danger col-xs-12" role="alert"><span class="fa fa-hand-stop-o"></span><%= messages.loginMessage%></div><br/>
 <% } %>
 <% if(messages.signupMessage) {%>
-    <div class="alert alert-danger" role="alert"><span class="fa fa-hand-stop-o"></span><%= messages.signupMessage%></div>
+    <div class="alert alert-danger col-xs-12" role="alert"><span class="fa fa-hand-stop-o"></span><%= messages.signupMessage%></div><br/>
 <% } %>

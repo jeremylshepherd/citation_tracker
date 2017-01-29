@@ -1,5 +1,5 @@
 {
-  "name": "UniversalReactTemplate",
+  "name": "CitationAppRedux",
   "version": "0.0.0",
   "description": "An attempt to create a simple template for React applications with Authentiction.",
   "main": "server.js",
@@ -29,6 +29,7 @@
     "gulp-sass": "^2.3.2",
     "jquery": "^3.1.0",
     "mongoose": "^4.5.6",
+    "nodemailer": "^0.7.1",
     "passport": "^0.3.2",
     "passport-github": "^1.1.0",
     "passport-google-oauth2": "^0.1.6",
@@ -37,6 +38,10 @@
     "react": "^15.2.1",
     "react-addons": "^0.9.1-deprecated",
     "react-dom": "^15.2.1",
+    "react-router": "^3.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.10.0"
   }
 }
