@@ -8,7 +8,6 @@ var mongoose = require('mongoose');
 var passport = require("passport");
 var session = require("express-session");
 var flash = require("express-flash");
-var logger = require("morgan");
 
 
 var app = express();
@@ -28,7 +27,6 @@ app.set('view engine', 'ejs');
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(logger('dev'));
 
 app.use(session({
 	secret: process.env.SESSION_SECRET,

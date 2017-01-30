@@ -29,16 +29,16 @@ gulp.task('build-css', () => {
     .pipe(gulp.dest('public/dist'));
 });
 
-gulp.task("sass:watch", () => {
-    gulp.watch('src/*.sass', ['build-css']);    
+// gulp.task("sass:watch", () => {
+//     gulp.watch('src/*.sass', ['build-css']);    
     
     
-});
+// });
 
-gulp.task("js:watch", () => {
-    gulp.watch('src/app.js', ['build-js']);
-    gulp.watch('views/Components/*.js', ['build-js']);
-    gulp.watch('views/Components/*.js', ['build-react']);
-});
+// gulp.task("js:watch", () => {
+//     gulp.watch('src/app.js', ['build-js']);
+//     gulp.watch('views/Components/*.js', ['build-js']);
+//     gulp.watch('views/Components/*.js', ['build-react']);
+// });
 // "build-react",
-gulp.task("default", ["build-js", "build-react", "build-css", "sass:watch", "js:watch"]);
+gulp.task("default", ["build-js", "build-react", "build-css"]);
