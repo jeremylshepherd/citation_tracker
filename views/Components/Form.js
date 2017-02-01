@@ -157,7 +157,7 @@ var Form = React.createClass({
       !this.state.officer || 
       this.state.date.length < 10 || 
       this.state.time.length <5) {
-      submit = <input type="button" className="btn btn-primary disabled" value="Enter" onClick={this.handleCitationSubmit}/>;
+      submit = <input type="button" className="btn btn-primary disabled" value="Enter"/>;
     }else{
       submit = <input type="button" className="btn btn-primary" value="Enter" onClick={this.handleCitationSubmit}/>;
     }

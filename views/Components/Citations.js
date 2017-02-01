@@ -25,7 +25,7 @@ var Citations = React.createClass({
     });
     return (
       <div>
-          <table className="table table-striped table-hover table-bordered">
+          <table className="table table-striped table-hover table-bordered table-responsive">
             <thead>
               <tr>
                 <td>License</td>
@@ -34,7 +34,7 @@ var Citations = React.createClass({
                 <td>Model</td>
                 <td>Color</td>
                 <td>Year</td>
-                <td>Violation Code</td>
+                <td>Violation</td>
                 <td>Ticket #</td>
                 <td>Employee #</td>
                 <td>Date</td>

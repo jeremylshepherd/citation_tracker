@@ -80,6 +80,10 @@ var CitationApp = React.createClass({
     this.setState({query: e.target.value});
   },
   
+  clearQuery: function(e) {
+    this.setState({query: ''});
+  },
+  
   toggleAddCite: function() {
     this.setState({addCite: !this.state.addCite});
   },
@@ -172,7 +176,10 @@ var CitationApp = React.createClass({
               <span className={this.state.active ? "btn btn-default act" : "btn btn-success act"} onClick={this.toggleActive}>All</span>
             </div>
           </div>
+          <div className="input-group">
           <input type="text" placeholder="Search" className="form-control" value={this.state.query} onChange={this.handleQueryInput}/>        
+          <span className="input-group-addon" onClick={this.clearQuery}>Clear</span>
+          </div>
           <Citations data={filtered}/>
         </div>
         <LoginForm login={this.logInUser}/>

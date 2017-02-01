@@ -37695,6 +37695,10 @@ var CitationApp = _react2.default.createClass({
     this.setState({ query: e.target.value });
   },
 
+  clearQuery: function clearQuery(e) {
+    this.setState({ query: '' });
+  },
+
   toggleAddCite: function toggleAddCite() {
     this.setState({ addCite: !this.state.addCite });
   },
@@ -37831,7 +37835,16 @@ var CitationApp = _react2.default.createClass({
             )
           )
         ),
-        _react2.default.createElement('input', { type: 'text', placeholder: 'Search', className: 'form-control', value: this.state.query, onChange: this.handleQueryInput }),
+        _react2.default.createElement(
+          'div',
+          { className: 'input-group' },
+          _react2.default.createElement('input', { type: 'text', placeholder: 'Search', className: 'form-control', value: this.state.query, onChange: this.handleQueryInput }),
+          _react2.default.createElement(
+            'span',
+            { className: 'input-group-addon', onClick: this.clearQuery },
+            'Clear'
+          )
+        ),
         _react2.default.createElement(_Citations2.default, { data: filtered })
       ),
       _react2.default.createElement(_LoginForm2.default, { login: this.logInUser }),
@@ -37931,7 +37944,7 @@ var Citations = _react2.default.createClass({
       null,
       _react2.default.createElement(
         'table',
-        { className: 'table table-striped table-hover table-bordered' },
+        { className: 'table table-striped table-hover table-bordered table-responsive' },
         _react2.default.createElement(
           'thead',
           null,
@@ -37971,7 +37984,7 @@ var Citations = _react2.default.createClass({
             _react2.default.createElement(
               'td',
               null,
-              'Violation Code'
+              'Violation'
             ),
             _react2.default.createElement(
               'td',
@@ -38169,7 +38182,7 @@ var Form = _react2.default.createClass({
   render: function render() {
     var submit = void 0;
     if (!this.state.ticket || !this.state.make || !this.state.color || !this.state.tag || !this.state.violation.length || !this.state.location || !this.state.officer || this.state.date.length < 10 || this.state.time.length < 5) {
-      submit = _react2.default.createElement('input', { type: 'button', className: 'btn btn-primary disabled', value: 'Enter', onClick: this.handleCitationSubmit });
+      submit = _react2.default.createElement('input', { type: 'button', className: 'btn btn-primary disabled', value: 'Enter' });
     } else {
       submit = _react2.default.createElement('input', { type: 'button', className: 'btn btn-primary', value: 'Enter', onClick: this.handleCitationSubmit });
     }
