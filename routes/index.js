@@ -270,7 +270,7 @@ router.get('/api/citations', (req, res) => {
 router.get('/api/citation/:ticket', isLoggedIn, (req, res) => {
     Citation.findOne({'ticket': req.params.ticket}, (err, ticket) => {
        if(err){console.log(err);}
-       if(!ticket){return res.re('Ticket not found');}
+       if(!ticket){return res.json({message : 'Ticket not found'});}
        res.json(ticket);
     });
 });
