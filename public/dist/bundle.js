@@ -38303,7 +38303,7 @@ var Header = _react2.default.createClass({
         _react2.default.createElement(
           'h1',
           null,
-          _react2.default.createElement('img', { className: 'patch', src: '/dist/Artboard 1.svg' }),
+          _react2.default.createElement('img', { className: 'patch', src: '/dist/expandedPatch.svg' }),
           ' Good Samaritan Campus Police'
         ),
         _react2.default.createElement(

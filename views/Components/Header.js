@@ -16,7 +16,7 @@ var Header = React.createClass({
           </div>
         </nav>
         <header>
-          <h1><img className="patch" src="/dist/Artboard 1.svg"/> Good Samaritan Campus Police</h1>
+          <h1><img className="patch" src="/dist/expandedPatch.svg"/> Good Samaritan Campus Police</h1>
           <h3>Citation Application</h3>
         </header>
       </div>
