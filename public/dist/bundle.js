@@ -37691,14 +37691,6 @@ var CitationApp = _react2.default.createClass({
     this.getUser();
   },
 
-  handleQueryInput: function handleQueryInput(e) {
-    this.setState({ query: e.target.value });
-  },
-
-  clearQuery: function clearQuery(e) {
-    this.setState({ query: '' });
-  },
-
   toggleAddCite: function toggleAddCite() {
     this.setState({ addCite: !this.state.addCite });
   },
@@ -37735,6 +37727,10 @@ var CitationApp = _react2.default.createClass({
         console.error('/signon', status, err.toString());
       }.bind(this)
     });
+  },
+
+  receiveQuery: function receiveQuery(txt) {
+    this.setState({ query: txt });
   },
 
   render: function render() {
@@ -37835,17 +37831,7 @@ var CitationApp = _react2.default.createClass({
             )
           )
         ),
-        _react2.default.createElement(
-          'div',
-          { className: 'input-group' },
-          _react2.default.createElement('input', { type: 'text', placeholder: 'Search', className: 'form-control', value: this.state.query, onChange: this.handleQueryInput }),
-          _react2.default.createElement(
-            'span',
-            { className: 'input-group-addon', onClick: this.clearQuery },
-            'Clear'
-          )
-        ),
-        _react2.default.createElement(_Citations2.default, { data: filtered })
+        _react2.default.createElement(_Citations2.default, { data: filtered, query: this.receiveQuery })
       ),
       _react2.default.createElement(_LoginForm2.default, { login: this.logInUser }),
       _react2.default.createElement(_RegistrationForm2.default, { newReg: this.registerUser })
@@ -37870,6 +37856,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Citations = _react2.default.createClass({
   displayName: 'Citations',
+
+  getInitialState: function getInitialState() {
+    return {
+      query: ''
+    };
+  },
+
+  handleQueryInput: function handleQueryInput(e) {
+    this.setState({ query: e.target.value });
+    this.props.query(e.target.value);
+  },
+
+  clearQuery: function clearQuery(e) {
+    this.setState({ query: '' });
+    this.props.query(this.state.query);
+  },
 
   render: function render() {
     var citationNodes = this.props.data.map(function (x, i) {
@@ -37948,6 +37950,24 @@ var Citations = _react2.default.createClass({
         _react2.default.createElement(
           'thead',
           null,
+          _react2.default.createElement(
+            'tr',
+            { className: 'input-group' },
+            _react2.default.createElement(
+              'td',
+              null,
+              _react2.default.createElement('input', { type: 'text', placeholder: 'Search', className: 'form-control', value: this.state.query, onChange: this.handleQueryInput })
+            ),
+            _react2.default.createElement(
+              'td',
+              null,
+              _react2.default.createElement(
+                'span',
+                { className: 'input-group-addon', onClick: this.clearQuery },
+                'Clear'
+              )
+            )
+          ),
           _react2.default.createElement(
             'tr',
             null,
