@@ -12,6 +12,7 @@ class Profile extends React.Component {
         this.state = {
             user: {},
             username: '',
+            email: '',
             auth: false,
             citations: [],
             created: ''
@@ -27,6 +28,7 @@ class Profile extends React.Component {
           this.setState({
               user: data,
               username: data.local.username,
+              email: data.local.email,
               auth: true
             });
         }.bind(this),
@@ -65,8 +67,10 @@ class Profile extends React.Component {
         return (
             <div>
                 <Header user={this.state.user}/>
-                <h2 className="text-left">User: {this.state.username}</h2>
+                <h3 className="text-left">User: {this.state.username}</h3>
+                <h3 className="text-left">Email: {this.state.email}</h3>
                 <h3 className="text-left">Since: {date}</h3>
+                <br/>
                 <h3 className="text-left">Citations: {this.state.citations.length}</h3>
                 <Citations data={this.state.citations} />
             </div>

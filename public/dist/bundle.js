@@ -38481,6 +38481,7 @@ var Profile = function (_React$Component) {
         _this.state = {
             user: {},
             username: '',
+            email: '',
             auth: false,
             citations: [],
             created: ''
@@ -38499,6 +38500,7 @@ var Profile = function (_React$Component) {
                     this.setState({
                         user: data,
                         username: data.local.username,
+                        email: data.local.email,
                         auth: true
                     });
                 }.bind(this),
@@ -38542,7 +38544,7 @@ var Profile = function (_React$Component) {
                 null,
                 _react2.default.createElement(_Header2.default, { user: this.state.user }),
                 _react2.default.createElement(
-                    'h2',
+                    'h3',
                     { className: 'text-left' },
                     'User: ',
                     this.state.username
@@ -38550,9 +38552,16 @@ var Profile = function (_React$Component) {
                 _react2.default.createElement(
                     'h3',
                     { className: 'text-left' },
+                    'Email: ',
+                    this.state.email
+                ),
+                _react2.default.createElement(
+                    'h3',
+                    { className: 'text-left' },
                     'Since: ',
                     date
                 ),
+                _react2.default.createElement('br', null),
                 _react2.default.createElement(
                     'h3',
                     { className: 'text-left' },
@@ -38790,12 +38799,6 @@ var Ticket = _react2.default.createClass({
       }.bind(this)
     });
   },
-
-  // componentWillMount: function() {
-  //   if(!isLoggedIn()) {
-  //     browserHistory.push('/');
-  //   }
-  // },
 
   componentDidMount: function componentDidMount() {
     this.getCitation();

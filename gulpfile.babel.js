@@ -14,31 +14,10 @@ gulp.task("build-js", () => {
     .pipe(gulp.dest("public/dist"));
 });
 
-gulp.task("build-react", () => {
-    
-    return browserify("views/Components/ReactApp")
-    .transform("babelify")
-    .bundle()
-    .pipe(source("ReactApp.js"))
-    .pipe(gulp.dest("public/dist"));
-});
-
 gulp.task('build-css', () => {
   return gulp.src('src/*.sass')
     .pipe(sass())
     .pipe(gulp.dest('public/dist'));
 });
 
-// gulp.task("sass:watch", () => {
-//     gulp.watch('src/*.sass', ['build-css']);    
-    
-    
-// });
-
-// gulp.task("js:watch", () => {
-//     gulp.watch('src/app.js', ['build-js']);
-//     gulp.watch('views/Components/*.js', ['build-js']);
-//     gulp.watch('views/Components/*.js', ['build-react']);
-// });
-// "build-react",
-gulp.task("default", ["build-js", "build-react", "build-css"]);
+gulp.task("default", ["build-js", "build-css"]);
