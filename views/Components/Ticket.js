@@ -7,7 +7,7 @@ import LoginForm from './LoginForm';
 import Header from './Header';
 import TicketFooter from './TicketFooter';
 import Form from './Form';
-import {expired, queryCheck } from '../../src/helpers';
+import { expired, queryCheck } from '../../src/helpers';
 import { browserHistory } from 'react-router';
 
 var Ticket = React.createClass({
@@ -56,12 +56,6 @@ var Ticket = React.createClass({
       }.bind(this)
     });
   },
-  
-  // componentWillMount: function() {
-  //   if(!isLoggedIn()) {
-  //     browserHistory.push('/');
-  //   }
-  // },
   
   componentDidMount: function() {
     this.getCitation();

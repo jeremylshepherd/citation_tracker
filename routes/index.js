@@ -217,7 +217,7 @@ router.get('/api/me', isLoggedIn, (req, res) => {
     }
 });
 
-router.get('/users/:username', isLoggedIn, (req, res) => {
+router.get('/api/users/:username', isLoggedIn, (req, res) => {
    User.findOne({'local.username' : req.params.username}, (err, user) => {
        if(err) {res.json(err);}
        if(!user) {return res.json('User does not exist');}

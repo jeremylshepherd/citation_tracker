@@ -37548,6 +37548,10 @@ var _Ticket = require('../views/Components/Ticket.js');
 
 var _Ticket2 = _interopRequireDefault(_Ticket);
 
+var _Profile = require('../views/Components/Profile.js');
+
+var _Profile2 = _interopRequireDefault(_Profile);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var node = document.getElementById('app');
@@ -37556,10 +37560,11 @@ _reactDom2.default.render(_react2.default.createElement(
     _reactRouter.Router,
     { history: _reactRouter.browserHistory },
     _react2.default.createElement(_reactRouter.Route, { path: '/', component: _CitationApp2.default }),
-    _react2.default.createElement(_reactRouter.Route, { path: '/:ticket', component: _Ticket2.default })
+    _react2.default.createElement(_reactRouter.Route, { path: '/:ticket', component: _Ticket2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: '/officer/:user', component: _Profile2.default })
 ), node);
 
-},{"../views/Components/CitationApp.js":244,"../views/Components/RegistrationForm.js":249,"../views/Components/Ticket.js":250,"react":241,"react-dom":16,"react-router":43}],243:[function(require,module,exports){
+},{"../views/Components/CitationApp.js":244,"../views/Components/Profile.js":249,"../views/Components/RegistrationForm.js":250,"../views/Components/Ticket.js":251,"react":241,"react-dom":16,"react-router":43}],243:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -37855,7 +37860,7 @@ var CitationApp = _react2.default.createClass({
 
 module.exports = CitationApp;
 
-},{"../../src/helpers":243,"./Citations":245,"./Form":246,"./Header":247,"./LoginForm":248,"./RegistrationForm":249,"./TicketFooter":251,"bootstrap-jquery":1,"jquery":15,"react":241}],245:[function(require,module,exports){
+},{"../../src/helpers":243,"./Citations":245,"./Form":246,"./Header":247,"./LoginForm":248,"./RegistrationForm":250,"./TicketFooter":252,"bootstrap-jquery":1,"jquery":15,"react":241}],245:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38234,7 +38239,7 @@ var Form = _react2.default.createClass({
 
 module.exports = Form;
 
-},{"./TicketFooter":251,"react":241}],247:[function(require,module,exports){
+},{"./TicketFooter":252,"react":241}],247:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38253,7 +38258,11 @@ var Header = _react2.default.createClass({
       'div',
       { className: 'navbar-form navbar-right' },
       'Logged in as ',
-      this.props.user.local.username,
+      _react2.default.createElement(
+        _reactRouter.Link,
+        { to: '/officer/' + this.props.user.local.username },
+        this.props.user.local.username
+      ),
       ' ',
       _react2.default.createElement(
         'a',
@@ -38429,6 +38438,140 @@ module.exports = LoginForm;
 },{"./Header":247,"react":241}],249:[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require('react-router');
+
+var _Header = require('./Header');
+
+var _Header2 = _interopRequireDefault(_Header);
+
+var _Citations = require('./Citations');
+
+var _Citations2 = _interopRequireDefault(_Citations);
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Profile = function (_React$Component) {
+    _inherits(Profile, _React$Component);
+
+    function Profile() {
+        _classCallCheck(this, Profile);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Profile).call(this));
+
+        _this.state = {
+            user: {},
+            username: '',
+            auth: false,
+            citations: [],
+            created: ''
+        };
+        return _this;
+    }
+
+    _createClass(Profile, [{
+        key: 'getUser',
+        value: function getUser() {
+            _jquery2.default.ajax({
+                url: '/api/me',
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    this.setState({
+                        user: data,
+                        username: data.local.username,
+                        auth: true
+                    });
+                }.bind(this),
+                error: function (xhr, status, err) {
+                    console.error('/api/me', status, err.toString());
+                    _reactRouter.browserHistory.push('/');
+                }.bind(this)
+            });
+        }
+    }, {
+        key: 'getUserCitations',
+        value: function getUserCitations() {
+            _jquery2.default.ajax({
+                url: '/api/users/' + this.props.params.user,
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    this.setState({
+                        citations: data.citations,
+                        created: data.created
+                    });
+                }.bind(this),
+                error: function (xhr, status, err) {
+                    console.error('/users/' + this.props.params.user, status, err.toString());
+                }.bind(this)
+            });
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this.getUser();
+            this.getUserCitations();
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var date = new Date(this.state.created);
+            date = date.toLocaleDateString('en-us');
+            return _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(_Header2.default, { user: this.state.user }),
+                _react2.default.createElement(
+                    'h2',
+                    { className: 'text-left' },
+                    'User: ',
+                    this.state.username
+                ),
+                _react2.default.createElement(
+                    'h3',
+                    { className: 'text-left' },
+                    'Since: ',
+                    date
+                ),
+                _react2.default.createElement(
+                    'h3',
+                    { className: 'text-left' },
+                    'Citations: ',
+                    this.state.citations.length
+                ),
+                _react2.default.createElement(_Citations2.default, { data: this.state.citations })
+            );
+        }
+    }]);
+
+    return Profile;
+}(_react2.default.Component);
+
+exports.default = Profile;
+
+},{"./Citations":245,"./Header":247,"jquery":15,"react":241,"react-router":43}],250:[function(require,module,exports){
+'use strict';
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -38554,7 +38697,7 @@ var RegistrationForm = _react2.default.createClass({
 
 module.exports = RegistrationForm;
 
-},{"react":241}],250:[function(require,module,exports){
+},{"react":241}],251:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38741,7 +38884,7 @@ var Ticket = _react2.default.createClass({
 
 module.exports = Ticket;
 
-},{"../../src/helpers":243,"./Citations":245,"./Form":246,"./Header":247,"./LoginForm":248,"./RegistrationForm":249,"./TicketFooter":251,"bootstrap-jquery":1,"jquery":15,"react":241,"react-router":43}],251:[function(require,module,exports){
+},{"../../src/helpers":243,"./Citations":245,"./Form":246,"./Header":247,"./LoginForm":248,"./RegistrationForm":250,"./TicketFooter":252,"bootstrap-jquery":1,"jquery":15,"react":241,"react-router":43}],252:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
