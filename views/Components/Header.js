@@ -10,7 +10,7 @@ var Header = React.createClass({
     return (
       <div>
         <nav className="navbar navbar-default navbar-fixed-top">
-          <div className="container">
+          <div className="container-fluid">
             <Link to='/'  className="navbar-brand">Citation Tracker</Link>
             {icon}
           </div>

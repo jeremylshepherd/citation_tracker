@@ -169,7 +169,7 @@ var CitationApp = React.createClass({
           </div>
           <div>
             <div className="pull-left">
-              <h2><span className="label label-default pull-left">{count}</span></h2>
+              <h2><span className="label label-primary pull-left">{count}</span></h2>
             </div>
             <div className="pull-right">
               <span className={this.state.active ? "btn btn-success act" : "btn btn-default act"} onClick={this.toggleActive}>Active</span>

@@ -37820,7 +37820,7 @@ var CitationApp = _react2.default.createClass({
               null,
               _react2.default.createElement(
                 'span',
-                { className: 'label label-default pull-left' },
+                { className: 'label label-primary pull-left' },
                 count
               )
             )
@@ -38297,7 +38297,7 @@ var Header = _react2.default.createClass({
         { className: 'navbar navbar-default navbar-fixed-top' },
         _react2.default.createElement(
           'div',
-          { className: 'container' },
+          { className: 'container-fluid' },
           _react2.default.createElement(
             _reactRouter.Link,
             { to: '/', className: 'navbar-brand' },
