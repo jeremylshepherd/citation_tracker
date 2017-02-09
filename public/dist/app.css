@@ -255,7 +255,7 @@ fieldset[disabled] .btn-linkedIn.active {
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.8); }
 
 body {
-  padding: 60px; }
+  padding-top: 60px; }
 
 table {
   table-layout: auto;
@@ -272,3 +272,9 @@ table {
 
 .act {
   width: 85px; }
+
+@media screen and (max-width: 767px) {
+  .container {
+    width: 90%; }
+  .table-responsive {
+    width: 75%; } }
