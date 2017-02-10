@@ -21,5 +21,18 @@ module.exports = {
       }else{
         return false;
       }
+    },
+    
+    cleanInput: function(str) {
+      var re = /^[A-z0-9 _\/ \, \:]*[A-z0-9 _\/ \, \:][A-z0-9 _\/ \, \:]*$/;
+      var arr = str.split('');
+      var newArr = [];
+      for(var i = 0; i < arr.length; i++){
+          if(re.test(arr[i])){
+              newArr.push(arr[i]);
+          }
+      }
+      var newStr = newArr.join('');
+      return newStr.toUpperCase();
     }
 };

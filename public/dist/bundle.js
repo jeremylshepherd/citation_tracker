@@ -37565,7 +37565,7 @@ _reactDom2.default.render(_react2.default.createElement(
 ), node);
 
 },{"../views/Components/CitationApp.js":244,"../views/Components/Profile.js":249,"../views/Components/RegistrationForm.js":250,"../views/Components/Ticket.js":251,"react":241,"react-dom":16,"react-router":43}],243:[function(require,module,exports){
-"use strict";
+'use strict';
 
 module.exports = {
   expired: function expired(str) {
@@ -37581,6 +37581,19 @@ module.exports = {
     } else {
       return false;
     }
+  },
+
+  cleanInput: function cleanInput(str) {
+    var re = /^[A-z0-9 _\/ \, \:]*[A-z0-9 _\/ \, \:][A-z0-9 _\/ \, \:]*$/;
+    var arr = str.split('');
+    var newArr = [];
+    for (var i = 0; i < arr.length; i++) {
+      if (re.test(arr[i])) {
+        newArr.push(arr[i]);
+      }
+    }
+    var newStr = newArr.join('');
+    return newStr.toUpperCase();
   }
 };
 
@@ -38036,6 +38049,8 @@ var _TicketFooter = require('./TicketFooter');
 
 var _TicketFooter2 = _interopRequireDefault(_TicketFooter);
 
+var _helpers = require('../../src/helpers');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Form = _react2.default.createClass({
@@ -38061,50 +38076,57 @@ var Form = _react2.default.createClass({
   },
 
   handleTicketInput: function handleTicketInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      ticket: e.target.value.toUpperCase()
+      ticket: input
     });
   },
 
   handleMakeInput: function handleMakeInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      make: e.target.value.toUpperCase()
+      make: input
     });
   },
 
   handleModelInput: function handleModelInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      model: e.target.value.toUpperCase()
+      model: input
     });
   },
 
   handleColorInput: function handleColorInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      color: e.target.value.toUpperCase()
+      color: input
     });
   },
 
   handleYearInput: function handleYearInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      year: e.target.value
+      year: input
     });
   },
 
   handleTagInput: function handleTagInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      tag: e.target.value.toUpperCase()
+      tag: input
     });
   },
 
   handleStateInput: function handleStateInput(e) {
-    var input = e.target.value;
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      state: input.slice(0, 2).toUpperCase()
+      state: input.slice(0, 2)
     });
   },
 
   handleViolationInput: function handleViolationInput(e) {
-    var arr = e.target.value.split(',');
+    var input = (0, _helpers.cleanInput)(e.target.value);
+    var arr = input.split(',');
     arr = arr.map(function (r) {
       return r.trim();
     });
@@ -38114,39 +38136,44 @@ var Form = _react2.default.createClass({
   },
 
   handleEmployeeInput: function handleEmployeeInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      employee: e.target.value
+      employee: input
     });
   },
 
   handleLocationInput: function handleLocationInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      location: e.target.value.toUpperCase()
+      location: input
     });
   },
 
   handleDateInput: function handleDateInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      date: e.target.value
+      date: input
     });
   },
 
   handleTimeInput: function handleTimeInput(e) {
-
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      time: e.target.value
+      time: input
     });
   },
 
   handleOfficerInput: function handleOfficerInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      officer: e.target.value.toUpperCase()
+      officer: input
     });
   },
 
   handleUnitInput: function handleUnitInput(e) {
+    var input = (0, _helpers.cleanInput)(e.target.value);
     this.setState({
-      unit: e.target.value
+      unit: input
     });
   },
 
@@ -38239,7 +38266,7 @@ var Form = _react2.default.createClass({
 
 module.exports = Form;
 
-},{"./TicketFooter":252,"react":241}],247:[function(require,module,exports){
+},{"../../src/helpers":243,"./TicketFooter":252,"react":241}],247:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');

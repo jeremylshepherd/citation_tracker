@@ -1,5 +1,6 @@
 import React from 'react';
 import TicketFooter from './TicketFooter';
+import {cleanInput} from '../../src/helpers';
 
 var Form = React.createClass({
   getInitialState: function() {
@@ -22,50 +23,57 @@ var Form = React.createClass({
   },
   
   handleTicketInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      ticket: e.target.value.toUpperCase()
+      ticket: input
     });
   },
   
   handleMakeInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      make: e.target.value.toUpperCase()
+      make: input
     });
   },
   
   handleModelInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      model: e.target.value.toUpperCase()
+      model: input
     });
   },
   
   handleColorInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      color: e.target.value.toUpperCase()
+      color: input
     });
   },
   
   handleYearInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      year: e.target.value
+      year: input
     });
   },
   
   handleTagInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      tag: e.target.value.toUpperCase()
+      tag: input
     });
   },
   
   handleStateInput: function(e) {
-    let input = e.target.value;
+    let input = cleanInput(e.target.value);
     this.setState({
-      state: input.slice(0,2).toUpperCase()
+      state: input.slice(0,2)
     });
   },
   
   handleViolationInput: function(e) {
-    let arr = e.target.value.split(',');
+    let input = cleanInput(e.target.value);
+    let arr = input.split(',');
     arr = arr.map((r) => {
       return r.trim();
     });
@@ -75,39 +83,44 @@ var Form = React.createClass({
   },
   
   handleEmployeeInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      employee: e.target.value
+      employee: input
     });
   },
   
   handleLocationInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      location: e.target.value.toUpperCase()
+      location: input
     });
   },
   
   handleDateInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      date: e.target.value
+      date: input
     });
   },
   
   handleTimeInput: function(e) {
-    
+    let input = cleanInput(e.target.value);
     this.setState({
-      time: e.target.value
+      time: input
     });
   },
   
   handleOfficerInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      officer: e.target.value.toUpperCase()
+      officer: input
     });
   },
   
   handleUnitInput: function(e) {
+    let input = cleanInput(e.target.value);
     this.setState({
-      unit: e.target.value
+      unit: input
     });
   },
   
