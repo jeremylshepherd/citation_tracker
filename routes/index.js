@@ -225,6 +225,7 @@ router.get('/api/users/:username', isLoggedIn, (req, res) => {
            if(err) {res.json(err);}
            let obj = {};
            obj.username = user.local.username;
+           obj.email = user.local.email;
            obj.created = user.local.created;
            obj.citations = citations;
            res.json(obj);

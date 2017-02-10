@@ -27,8 +27,6 @@ class Profile extends React.Component {
         success: function(data) {
           this.setState({
               user: data,
-              username: data.local.username,
-              email: data.local.email,
               auth: true
             });
         }.bind(this),
@@ -47,7 +45,9 @@ class Profile extends React.Component {
         success: function(data) {
           this.setState({
               citations: data.citations,
-              created: data.created
+              created: data.created,
+              username: data.username,
+              email: data.email
             });
         }.bind(this),
         error: function(xhr, status, err) {
