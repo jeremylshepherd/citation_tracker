@@ -12,7 +12,7 @@ var favicon = require('serve-favicon');
 
 
 var app = express();
-app.use(favicon(path.join(__dirname, '/public/dist/favicon.ico')));
+app.use(favicon(path.join(__dirname, '/public/dist/favicon.png')));
 require('dotenv').load();
 
 require("./config/passport")(passport);
