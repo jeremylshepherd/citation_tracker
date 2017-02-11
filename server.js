@@ -8,9 +8,11 @@ var mongoose = require('mongoose');
 var passport = require("passport");
 var session = require("express-session");
 var flash = require("express-flash");
+var favicon = require('serve-favicon');
 
 
 var app = express();
+app.use(favicon(path.join(__dirname, '/public/dist/favicon.ico')));
 require('dotenv').load();
 
 require("./config/passport")(passport);
