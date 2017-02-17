@@ -37564,7 +37564,7 @@ _reactDom2.default.render(_react2.default.createElement(
     _react2.default.createElement(_reactRouter.Route, { path: '/officer/:user', component: _Profile2.default })
 ), node);
 
-},{"../views/Components/CitationApp.js":244,"../views/Components/Profile.js":249,"../views/Components/RegistrationForm.js":250,"../views/Components/Ticket.js":251,"react":241,"react-dom":16,"react-router":43}],243:[function(require,module,exports){
+},{"../views/Components/CitationApp.js":244,"../views/Components/Profile.js":250,"../views/Components/RegistrationForm.js":251,"../views/Components/Ticket.js":252,"react":241,"react-dom":16,"react-router":43}],243:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -37594,6 +37594,13 @@ module.exports = {
     }
     var newStr = newArr.join('');
     return newStr.toUpperCase();
+  },
+
+  validator: function validator(r) {
+    if (!r.ticket || !r.make || !r.color || !r.tag || !r.violation.length || !r.location || !r.officer || r.date.length < 10 || r.time.length < 5) {
+      return false;
+    }
+    return true;
   }
 };
 
@@ -37873,7 +37880,265 @@ var CitationApp = _react2.default.createClass({
 
 module.exports = CitationApp;
 
-},{"../../src/helpers":243,"./Citations":245,"./Form":246,"./Header":247,"./LoginForm":248,"./RegistrationForm":250,"./TicketFooter":252,"bootstrap-jquery":1,"jquery":15,"react":241}],245:[function(require,module,exports){
+},{"../../src/helpers":243,"./Citations":246,"./Form":247,"./Header":248,"./LoginForm":249,"./RegistrationForm":251,"./TicketFooter":253,"bootstrap-jquery":1,"jquery":15,"react":241}],245:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _helpers = require('../../src/helpers.js');
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CitationUpdateForm = function (_Component) {
+  _inherits(CitationUpdateForm, _Component);
+
+  function CitationUpdateForm(props) {
+    _classCallCheck(this, CitationUpdateForm);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CitationUpdateForm).call(this, props));
+
+    _this.state = _extends({}, props);
+    _this.handleInputChange = _this.handleInputChange.bind(_this);
+    _this.handleUpdate = _this.handleUpdate.bind(_this);
+    return _this;
+  }
+
+  _createClass(CitationUpdateForm, [{
+    key: 'handleInputChange',
+    value: function handleInputChange(e) {
+      var target = e.target;
+      var value = (0, _helpers.cleanInput)(target.value);
+      var name = target.name;
+      value = value.toUpperCase();
+      if (target.name === 'violation') {
+        value = value.split(',').map(function (r) {
+          return r.trim();
+        });
+      }
+      if (name == 'officer') {
+        this.setState({
+          officer: {
+            name: value
+          }
+        });
+      }
+      if (name == 'unit') {
+        this.setState({
+          officer: {
+            unit: value
+          }
+        });
+      }
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'handleUpdate',
+    value: function handleUpdate() {
+      var cite = {};
+      cite.tag = this.state.tag;
+      cite.make = this.state.make;
+      cite.model = this.state.model;
+      cite.color = this.state.color;
+      cite.state = this.state.state;
+      cite.year = this.state.year;
+      cite.violation = this.state.violation;
+      cite.employee = this.state.employee;
+      cite.location = this.state.location;
+      cite.ticket = this.state.ticket;
+      cite.date = this.state.date;
+      cite.time = this.state.time;
+      cite.officer = this.state.officer;
+      this.props.update(cite);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var button = void 0;
+      if (!(0, _helpers.validator)(this.state)) {
+        console.log('Input is now false');
+        button = _react2.default.createElement(
+          'button',
+          {
+            className: 'btn btn-primary disabled',
+            type: 'submit',
+            'data-dismiss': 'modal' },
+          'Update'
+        );
+      } else {
+        button = _react2.default.createElement(
+          'button',
+          {
+            className: 'btn btn-primary',
+            onClick: this.handleUpdate,
+            type: 'submit',
+            'data-dismiss': 'modal' },
+          'Update'
+        );
+      }
+      return _react2.default.createElement(
+        'div',
+        { className: 'modal fade', id: this.props.id },
+        _react2.default.createElement(
+          'div',
+          { className: 'modal-dialog', role: 'document' },
+          _react2.default.createElement(
+            'div',
+            { className: 'modal-content' },
+            _react2.default.createElement(
+              'div',
+              { className: 'modal-header' },
+              _react2.default.createElement(
+                'h4',
+                { className: 'modal-title' },
+                this.state.ticket ? this.state.ticket : "No number"
+              ),
+              _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove pull-right', 'data-dismiss': 'modal' })
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'modal-body' },
+              _react2.default.createElement(
+                'form',
+                { className: 'form-group' },
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'tag',
+                  placeholder: 'Tag',
+                  value: this.state.tag,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'make',
+                  placeholder: 'Make',
+                  value: this.state.make,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'model',
+                  placeholder: 'Model',
+                  value: this.state.model,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'color',
+                  placeholder: 'Color',
+                  value: this.state.color,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'state',
+                  placeholder: 'State',
+                  value: this.state.state,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'year',
+                  placeholder: 'Year',
+                  value: this.state.year,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'violation',
+                  placeholder: 'Violation(s)',
+                  value: this.state.violation,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'location',
+                  placeholder: 'Location',
+                  value: this.state.location,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'ticket',
+                  placeholder: 'Ticket',
+                  value: this.state.ticket,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'employee',
+                  placeholder: 'Employee #',
+                  value: this.state.employee,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'date',
+                  placeholder: 'Date',
+                  value: this.state.date,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'time',
+                  placeholder: 'Time',
+                  value: this.state.time,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'officer',
+                  placeholder: 'Officer',
+                  value: this.state.officer.name,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement('input', {
+                  className: 'form-control',
+                  name: 'unit',
+                  placeholder: 'Unit #',
+                  value: this.state.officer.unit,
+                  onChange: this.handleInputChange
+                }),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'modal-footer' },
+                  button
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return CitationUpdateForm;
+}(_react.Component);
+
+exports.default = CitationUpdateForm;
+
+},{"../../src/helpers.js":243,"jquery":15,"react":241}],246:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -37890,9 +38155,12 @@ var Citations = _react2.default.createClass({
   displayName: 'Citations',
 
   render: function render() {
+    var _this = this;
+
     var citationNodes = this.props.data.map(function (x, i) {
       var clName = (0, _helpers.expired)(x.date) ? 'danger' : '';
       var link = '/' + x.ticket;
+      var unit = _this.props.auth ? _react2.default.createElement('span', { className: 'glyphicon glyphicon-pencil', 'data-toggle': 'modal', 'data-target': '#citation' + i }) : x.officer.unit;
       return _react2.default.createElement(
         'tr',
         { key: i, className: clName },
@@ -37953,7 +38221,7 @@ var Citations = _react2.default.createClass({
         _react2.default.createElement(
           'td',
           null,
-          x.officer.unit
+          unit
         )
       );
     });
@@ -38022,7 +38290,7 @@ var Citations = _react2.default.createClass({
             _react2.default.createElement(
               'td',
               null,
-              'Unit'
+              this.props.auth ? "Edit" : "Unit"
             )
           )
         ),
@@ -38038,7 +38306,7 @@ var Citations = _react2.default.createClass({
 
 module.exports = Citations;
 
-},{"../../src/helpers.js":243,"react":241,"react-router":43}],246:[function(require,module,exports){
+},{"../../src/helpers.js":243,"react":241,"react-router":43}],247:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38213,7 +38481,17 @@ var Form = _react2.default.createClass({
 
   render: function render() {
     var submit = void 0;
-    if (!this.state.ticket || !this.state.make || !this.state.color || !this.state.tag || !this.state.violation.length || !this.state.location || !this.state.officer || this.state.date.length < 10 || this.state.time.length < 5) {
+    // if(
+    //   !this.state.ticket ||
+    //   !this.state.make ||
+    //   !this.state.color || 
+    //   !this.state.tag || 
+    //   !this.state.violation.length || 
+    //   !this.state.location || 
+    //   !this.state.officer || 
+    //   this.state.date.length < 10 || 
+    //   this.state.time.length <5) {
+    if (!(0, _helpers.validator)(this.state)) {
       submit = _react2.default.createElement('input', { type: 'button', className: 'btn btn-primary disabled', value: 'Enter' });
     } else {
       submit = _react2.default.createElement('input', { type: 'button', className: 'btn btn-primary', value: 'Enter', onClick: this.handleCitationSubmit });
@@ -38266,7 +38544,7 @@ var Form = _react2.default.createClass({
 
 module.exports = Form;
 
-},{"../../src/helpers":243,"./TicketFooter":252,"react":241}],247:[function(require,module,exports){
+},{"../../src/helpers":243,"./TicketFooter":253,"react":241}],248:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38354,7 +38632,7 @@ var Header = _react2.default.createClass({
 
 module.exports = Header;
 
-},{"react":241,"react-router":43}],248:[function(require,module,exports){
+},{"react":241,"react-router":43}],249:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38462,12 +38740,14 @@ var LoginForm = _react2.default.createClass({
 
 module.exports = LoginForm;
 
-},{"./Header":247,"react":241}],249:[function(require,module,exports){
+},{"./Header":248,"react":241}],250:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -38484,6 +38764,10 @@ var _Header2 = _interopRequireDefault(_Header);
 var _Citations = require('./Citations');
 
 var _Citations2 = _interopRequireDefault(_Citations);
+
+var _CitationUpdateForm = require('./CitationUpdateForm');
+
+var _CitationUpdateForm2 = _interopRequireDefault(_CitationUpdateForm);
 
 var _jquery = require('jquery');
 
@@ -38506,13 +38790,16 @@ var Profile = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Profile).call(this));
 
         _this.state = {
+            _id: '',
             user: {},
             username: '',
             email: '',
             auth: false,
+            edit: false,
             citations: [],
             created: ''
         };
+        _this.getUserCitations = _this.getUserCitations.bind(_this);
         return _this;
     }
 
@@ -38526,6 +38813,7 @@ var Profile = function (_React$Component) {
                 success: function (data) {
                     this.setState({
                         user: data,
+                        _id: data._id,
                         auth: true
                     });
                 }.bind(this),
@@ -38547,7 +38835,8 @@ var Profile = function (_React$Component) {
                         citations: data.citations,
                         created: data.created,
                         username: data.username,
-                        email: data.email
+                        email: data.email,
+                        edit: data.edit
                     });
                 }.bind(this),
                 error: function (xhr, status, err) {
@@ -38556,16 +38845,43 @@ var Profile = function (_React$Component) {
             });
         }
     }, {
+        key: 'editCite',
+        value: function editCite(obj) {
+            _jquery2.default.ajax({
+                url: '/api/update/' + obj.ticket,
+                dataType: 'json',
+                type: 'POST',
+                data: obj,
+                success: function success(res) {
+                    console.log(res.message);
+                },
+                error: function error(xhr, status, err) {
+                    console.error('/api/update/' + obj.ticket, status, err.toString());
+                }
+            });
+        }
+    }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
             this.getUser();
             this.getUserCitations();
+            this.timer = setInterval(this.getUserCitations.bind(), 2000);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            clearInterval(this.timer);
         }
     }, {
         key: 'render',
         value: function render() {
+            var _this2 = this;
+
             var date = new Date(this.state.created);
             date = date.toLocaleDateString('en-us');
+            var CiteForms = this.state.citations.map(function (c, i) {
+                return _react2.default.createElement(_CitationUpdateForm2.default, _extends({ key: i }, c, { update: _this2.editCite, id: 'citation' + i }));
+            });
             return _react2.default.createElement(
                 'div',
                 null,
@@ -38595,7 +38911,8 @@ var Profile = function (_React$Component) {
                     'Citations: ',
                     this.state.citations.length
                 ),
-                _react2.default.createElement(_Citations2.default, { data: this.state.citations })
+                _react2.default.createElement(_Citations2.default, { data: this.state.citations, auth: this.state.edit }),
+                CiteForms
             );
         }
     }]);
@@ -38605,7 +38922,7 @@ var Profile = function (_React$Component) {
 
 exports.default = Profile;
 
-},{"./Citations":245,"./Header":247,"jquery":15,"react":241,"react-router":43}],250:[function(require,module,exports){
+},{"./CitationUpdateForm":245,"./Citations":246,"./Header":248,"jquery":15,"react":241,"react-router":43}],251:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38733,7 +39050,7 @@ var RegistrationForm = _react2.default.createClass({
 
 module.exports = RegistrationForm;
 
-},{"react":241}],251:[function(require,module,exports){
+},{"react":241}],252:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38914,7 +39231,7 @@ var Ticket = _react2.default.createClass({
 
 module.exports = Ticket;
 
-},{"../../src/helpers":243,"./Citations":245,"./Form":246,"./Header":247,"./LoginForm":248,"./RegistrationForm":250,"./TicketFooter":252,"bootstrap-jquery":1,"jquery":15,"react":241,"react-router":43}],252:[function(require,module,exports){
+},{"../../src/helpers":243,"./Citations":246,"./Form":247,"./Header":248,"./LoginForm":249,"./RegistrationForm":251,"./TicketFooter":253,"bootstrap-jquery":1,"jquery":15,"react":241,"react-router":43}],253:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');

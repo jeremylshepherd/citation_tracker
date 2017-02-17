@@ -34,5 +34,21 @@ module.exports = {
       }
       var newStr = newArr.join('');
       return newStr.toUpperCase();
+    },
+    
+    validator: function(r) {
+       if(
+        !r.ticket ||
+        !r.make ||
+        !r.color || 
+        !r.tag || 
+        !r.violation.length || 
+        !r.location || 
+        !r.officer || 
+        r.date.length < 10 || 
+        r.time.length <5) {
+          return false;
+      }
+      return true;
     }
 };

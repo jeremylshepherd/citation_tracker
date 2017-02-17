@@ -1,6 +1,6 @@
 import React from 'react';
 import TicketFooter from './TicketFooter';
-import {cleanInput} from '../../src/helpers';
+import {cleanInput, validator} from '../../src/helpers';
 
 var Form = React.createClass({
   getInitialState: function() {
@@ -160,16 +160,17 @@ var Form = React.createClass({
   
   render: function() {
     let submit;
-    if(
-      !this.state.ticket ||
-      !this.state.make ||
-      !this.state.color || 
-      !this.state.tag || 
-      !this.state.violation.length || 
-      !this.state.location || 
-      !this.state.officer || 
-      this.state.date.length < 10 || 
-      this.state.time.length <5) {
+    // if(
+    //   !this.state.ticket ||
+    //   !this.state.make ||
+    //   !this.state.color || 
+    //   !this.state.tag || 
+    //   !this.state.violation.length || 
+    //   !this.state.location || 
+    //   !this.state.officer || 
+    //   this.state.date.length < 10 || 
+    //   this.state.time.length <5) {
+    if(!validator(this.state)){
       submit = <input type="button" className="btn btn-primary disabled" value="Enter"/>;
     }else{
       submit = <input type="button" className="btn btn-primary" value="Enter" onClick={this.handleCitationSubmit}/>;

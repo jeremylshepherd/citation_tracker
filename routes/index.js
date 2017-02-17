@@ -215,6 +215,8 @@ router.get('/api/users/:username', isLoggedIn, (req, res) => {
        Citation.find({'creator' : user._id}, (err, citations) => {
            if(err) {res.json(err);}
            let obj = {};
+           obj._id = user._id;
+           obj.edit = req.user._id.toString() == user._id.toString() ? true : false;
            obj.username = user.local.username;
            obj.email = user.local.email;
            obj.created = user.local.created;
@@ -257,7 +259,8 @@ router.post('/api/update/:ticket', isLoggedIn, (req, res) => {
         if(err)  {console.log(err);}
         Citation.findOne({'ticket': req.params.ticket}, (err, citation) => {
             if(err)  {console.log(err);}
-            if(user._id === citation.creator){
+            
+            if(user._id.toString() === citation.creator.toString()){
                 citation.ticket = req.body.ticket;
                 citation.tag = req.body.tag;
                 citation.make = req.body.make;
@@ -269,22 +272,23 @@ router.post('/api/update/:ticket', isLoggedIn, (req, res) => {
                 citation.location = req.body.location;
                 citation.date = req.body.date;
                 citation.time = req.body.time;
-                citation.officer  ={name: req.body.officer, unit: req.body.unit};
+                citation.officer  = {name: req.body.officer.name, unit: req.body.officer.unit};
                 citation.employee = req.body.employee;
                 
                 citation.save((err) => {
                   if(err) {console.log(err);}
                   console.log('Citation updated!');
-                  res.json('Citation updated');
+                  res.json({message:'Citation saved'});
                 });
             }else{
-                return res.json({message:"You cannot edit another's citations!"});
+                console.error("You cannot edit another's citations!");
+                return res.status('500').json({message:"You cannot edit another's citations!"});
             }
         });
     });
 });
 
-router.get('/api/citations', (req, res) => {
+router.get('/api/citations', isLoggedIn, (req, res) => {
     Citation.find({}, (err, results) => {
        if(err){console.log(err);}
        res.json(results);

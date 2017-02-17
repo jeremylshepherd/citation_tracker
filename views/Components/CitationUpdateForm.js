@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {validator, cleanInput} from '../../src/helpers.js';
 import $ from 'jquery';
 
 export default class CitationUpdateForm extends Component {
@@ -13,10 +14,27 @@ export default class CitationUpdateForm extends Component {
   
   handleInputChange(e) {
     let target = e.target;
-    let value = target.value;
+    let value = cleanInput(target.value);
     let name = target.name;
+    value = value.toUpperCase();
     if(target.name === 'violation') {
-      value = value.split(',').trim();
+      value = value.split(',').map((r) => {
+        return r.trim();
+      });
+    }
+    if(name == 'officer'){
+      this.setState({
+        officer:{
+          name: value
+        }
+      });
+    }
+    if(name == 'unit'){
+      this.setState({
+        officer:{
+          unit: value
+        }
+      });
     }
     this.setState({
       [name]: value
@@ -24,15 +42,46 @@ export default class CitationUpdateForm extends Component {
   }
   
   handleUpdate() {
-    let state = {...this.state};
-    //console.log(JSON.stringify(state, null, 4}));
-    let cite = state;
-    delete cite.id;
+    let cite = {};
+    cite.tag = this.state.tag;
+    cite.make = this.state.make;
+    cite.model = this.state.model;
+    cite.color = this.state.color;
+    cite.state = this.state.state;
+    cite.year = this.state.year;
+    cite.violation = this.state.violation;
+    cite.employee = this.state.employee;
+    cite.location = this.state.location;
+    cite.ticket = this.state.ticket;
+    cite.date = this.state.date;
+    cite.time = this.state.time;
+    cite.officer = this.state.officer;
     this.props.update(cite);
   }
   
   render() {
-    
+    let button;
+    if(!validator(this.state)){
+      console.log('Input is now false');
+      button = (
+        <button 
+          className="btn btn-primary disabled"
+          type="submit" 
+          data-dismiss="modal">
+          Update
+        </button>
+      );
+    }else{
+      button = (
+        <button 
+          className="btn btn-primary"
+          onClick={this.handleUpdate} 
+          type="submit" 
+          data-dismiss="modal">
+          Update
+        </button>
+      );
+    }
     return (
       <div className="modal fade" id={this.props.id}>
         <div className="modal-dialog" role="document">
@@ -71,6 +120,13 @@ export default class CitationUpdateForm extends Component {
                   name="color" 
                   placeholder="Color"  
                   value={this.state.color}
+                  onChange={this.handleInputChange}
+                />
+                <input 
+                  className="form-control" 
+                  name="state" 
+                  placeholder="State"  
+                  value={this.state.state}
                   onChange={this.handleInputChange}
                 />
                 <input 
@@ -126,24 +182,18 @@ export default class CitationUpdateForm extends Component {
                   className="form-control" 
                   name="officer" 
                   placeholder="Officer"  
-                  value={this.state.officer}
+                  value={this.state.officer.name}
                   onChange={this.handleInputChange}
                 />
                 <input 
                   className="form-control" 
                   name="unit" 
                   placeholder="Unit #"  
-                  value={this.state.unit}
+                  value={this.state.officer.unit}
                   onChange={this.handleInputChange}
                 />
                 <div className="modal-footer">
-                  <button 
-                    className="btn btn-primary" 
-                    onClick={this.handleUpdate} 
-                    type="submit" 
-                    data-dismiss="modal">
-                    Update
-                  </button>
+                  {button}
                 </div>
               </form>
             </div>

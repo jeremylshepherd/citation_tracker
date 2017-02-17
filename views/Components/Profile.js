@@ -6,7 +6,7 @@ import CitationUpdateForm from './CitationUpdateForm';
 import $ from 'jquery';
 
 
-class Profile extends React.Component {
+export default class Profile extends React.Component {
     constructor() {
         super();
         
@@ -16,9 +16,11 @@ class Profile extends React.Component {
             username: '',
             email: '',
             auth: false,
+            edit: false,
             citations: [],
             created: ''
         };
+        this.getUserCitations = this.getUserCitations.bind(this);
     }
     
     getUser() {
@@ -28,7 +30,9 @@ class Profile extends React.Component {
         cache: false,
         success: function(data) {
           this.setState({
-              _id: data._id
+              user: data,
+              _id: data._id,
+              auth: true
             });
         }.bind(this),
         error: function(xhr, status, err) {
@@ -48,13 +52,9 @@ class Profile extends React.Component {
               citations: data.citations,
               created: data.created,
               username: data.username,
-              email: data.email
-            });
-            if(this.state._id === data.citations[0].creator){
-                this.setState({
-                    auth: true
-                });
-            }    
+              email: data.email,
+              edit: data.edit
+            });   
         }.bind(this),
         error: function(xhr, status, err) {
           console.error(`/users/${this.props.params.user}`, status, err.toString());
@@ -62,24 +62,29 @@ class Profile extends React.Component {
       });
     }
     
-    editCite(cite) {
+    editCite(obj) {
         $.ajax({
-          url: `/api/update/${cite.ticket}`,
-          type: 'post',
+          url: `/api/update/${obj.ticket}`,
           dataType: 'json',
-          data: cite,
-          success: function(data) {
-            this.getUserCitations();
-          }.bind(this),
-          error: function(xhr, status, err) {
-              console.error(`/api/update/${cite.ticket}`, status, err.toString());
-          }.bind(this)
+          type: 'POST',
+          data: obj,
+          success: (res) => {
+              console.log(res.message);
+          },
+          error: (xhr, status, err) => {
+            console.error(`/api/update/${obj.ticket}`, status, err.toString());
+          }
         });
     }
     
     componentDidMount() {
         this.getUser();
         this.getUserCitations();
+        this.timer = setInterval(this.getUserCitations.bind(), 2000);
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.timer);
     }
     
     render() {
@@ -87,7 +92,7 @@ class Profile extends React.Component {
         date = date.toLocaleDateString('en-us');
         let CiteForms = this.state.citations.map((c, i) => {
             return (
-                <CitationUpdateForm  key={i} {...c} update={this.editCite}/>
+                <CitationUpdateForm  key={i} {...c} update={this.editCite} id={`citation${i}`}/>
             );
         });
         return (
@@ -98,11 +103,9 @@ class Profile extends React.Component {
                 <h3 className="text-left">Since: {date}</h3>
                 <br/>
                 <h3 className="text-left">Citations: {this.state.citations.length}</h3>
-                <Citations data={this.state.citations} auth={this.state.auth}/>
+                <Citations data={this.state.citations} auth={this.state.edit}/>
                 {CiteForms}
             </div>
         );
     }
 }
-
-export default Profile;
