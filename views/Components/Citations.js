@@ -7,6 +7,9 @@ var Citations = React.createClass({
     let citationNodes = this.props.data.map((x, i) =>{
       let clName = expired(x.date) ? 'danger' : '';
       let link = `/${x.ticket}`;
+      let unit = this.props.auth ?
+      (<span className="glyphicon glyphicon-pencil" data-toggle="modal" data-target={`#citation${i}`}></span>) : 
+      x.officer.unit;
       return (
         <tr key={i} className={clName}>
           <td>{x.tag}</td>
@@ -19,7 +22,7 @@ var Citations = React.createClass({
           <td><Link to={link}>{x.ticket}</Link></td>
           <td>{x.employee}</td>
           <td>{x.date}</td>
-          <td>{x.officer.unit}</td>
+          <td>{unit}</td>
         </tr>
       );
     });
@@ -38,7 +41,7 @@ var Citations = React.createClass({
                 <td>Ticket #</td>
                 <td>Employee #</td>
                 <td>Date</td>
-                <td>Unit</td>
+                <td>{this.props.auth ? "Edit" : "Unit"}</td>
               </tr>
             </thead>
             <tbody>

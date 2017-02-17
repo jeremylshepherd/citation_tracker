@@ -2,6 +2,7 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import Header from './Header';
 import Citations from './Citations';
+import CitationUpdateForm from './CitationUpdateForm;'
 import $ from 'jquery';
 
 
@@ -10,6 +11,7 @@ class Profile extends React.Component {
         super();
         
         this.state = {
+            _id: '',
             user: {},
             username: '',
             email: '',
@@ -26,8 +28,7 @@ class Profile extends React.Component {
         cache: false,
         success: function(data) {
           this.setState({
-              user: data,
-              auth: true
+              _id: data._id
             });
         }.bind(this),
         error: function(xhr, status, err) {
@@ -49,11 +50,31 @@ class Profile extends React.Component {
               username: data.username,
               email: data.email
             });
+            if(this.state._id === data.citations[0].creator){
+                this.setState({
+                    auth: true
+                });
+            }    
         }.bind(this),
         error: function(xhr, status, err) {
           console.error(`/users/${this.props.params.user}`, status, err.toString());
         }.bind(this)
       });
+    }
+    
+    editCite(cite) {
+        $.ajax({
+          url: `/api/update/${cite.ticket}`,
+          type: 'post',
+          dataType: 'json',
+          data: cite,
+          success: function(data) {
+            this.getUserCitations();
+          }.bind(this),
+          error: function(xhr, status, err) {
+              console.error(`/api/update/${cite.ticket}`, status, err.toString());
+          }.bind(this)
+        });
     }
     
     componentDidMount() {
@@ -62,8 +83,13 @@ class Profile extends React.Component {
     }
     
     render() {
-        var date = new Date (this.state.created);
+        let date = new Date (this.state.created);
         date = date.toLocaleDateString('en-us');
+        let CiteForms = this.state.citations.map((c, i) => {
+            return (
+                <CitationUpdateForm  key={i} {...c} update={this.editCite}/>
+            );
+        });
         return (
             <div>
                 <Header user={this.state.user}/>
@@ -72,7 +98,8 @@ class Profile extends React.Component {
                 <h3 className="text-left">Since: {date}</h3>
                 <br/>
                 <h3 className="text-left">Citations: {this.state.citations.length}</h3>
-                <Citations data={this.state.citations} />
+                <Citations data={this.state.citations} auth={this.state.auth}/>
+                {CiteForms}
             </div>
         );
     }
