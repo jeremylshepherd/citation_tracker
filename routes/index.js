@@ -184,15 +184,6 @@ router.get('/logout', (req, res) => {
     res.redirect('/login');
 });
 
-router.post('/buffer', (req, res) => {
-    var token;
-    crypto.randomBytes(20, (err, buf) => {
-        if (err) throw err;
-        token =  buf.toString('hex');
-        res.json(token);
-    }); 
-});
-
 /******************************************************************************
 ****************______________API Routing______________************************
 ******************************************************************************/
@@ -258,6 +249,38 @@ router.post('/api/new/citation', isLoggedIn, (req, res) => {
           console.log('Citation saved!');
           res.json('Citation saved');
       });
+    });
+});
+
+router.post('/api/update/:ticket', isLoggedIn, (req, res) => {
+    User.findOne({'_id': req.user._id}, (err, user) => {
+        if(err)  {console.log(err);}
+        Citation.findOne({'ticket': req.params.ticket}, (err, citation) => {
+            if(err)  {console.log(err);}
+            if(user._id === citation.creator){
+                citation.ticket = req.body.ticket;
+                citation.tag = req.body.tag;
+                citation.make = req.body.make;
+                citation.model = req.body.model;
+                citation.year = req.body.year;
+                citation.color = req.body.color;
+                citation.state = req.body.state;
+                citation.violation = req.body.violation;
+                citation.location = req.body.location;
+                citation.date = req.body.date;
+                citation.time = req.body.time;
+                citation.officer  ={name: req.body.officer, unit: req.body.unit};
+                citation.employee = req.body.employee;
+                
+                citation.save((err) => {
+                  if(err) {console.log(err);}
+                  console.log('Citation updated!');
+                  res.json('Citation updated');
+                });
+            }else{
+                return res.json({message:"You cannot edit another's citations!"});
+            }
+        });
     });
 });
 
