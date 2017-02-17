@@ -3,8 +3,13 @@
   "version": "0.0.0",
   "description": "An attempt to create a simple template for React applications with Authentiction.",
   "main": "server.js",
-  "repository": "",
+  "repository": "https://github.com/jeremylshepherd/citation_tracker",
   "author": "Jeremy L. Shepherd <jeremylshepherd@gmail.com>",
+  "scripts": {
+    "pre": "gulp && mongod --smallfiles",
+    "test": "mocha test.js",
+    "start": "node server.js"
+  },
   "dependencies": {
     "babel-core": "^6.11.4",
     "babel-preset-es2015": "^6.9.0",
@@ -43,6 +48,10 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "devDependencies": {
-    "nodemon": "^1.10.0"
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.10.0",
+    "supertest": "^3.0.0"
   }
 }
