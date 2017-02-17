@@ -2,7 +2,7 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import Header from './Header';
 import Citations from './Citations';
-import CitationUpdateForm from './CitationUpdateForm;'
+import CitationUpdateForm from './CitationUpdateForm';
 import $ from 'jquery';
 
 
