@@ -38784,10 +38784,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Profile = function (_React$Component) {
     _inherits(Profile, _React$Component);
 
-    function Profile() {
+    function Profile(props) {
         _classCallCheck(this, Profile);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Profile).call(this));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Profile).call(this, props));
 
         _this.state = {
             _id: '',
@@ -38799,7 +38799,6 @@ var Profile = function (_React$Component) {
             citations: [],
             created: ''
         };
-        _this.getUserCitations = _this.getUserCitations.bind(_this);
         return _this;
     }
 
@@ -38816,6 +38815,7 @@ var Profile = function (_React$Component) {
                         _id: data._id,
                         auth: true
                     });
+                    console.log('User got!');
                 }.bind(this),
                 error: function (xhr, status, err) {
                     console.error('/api/me', status, err.toString());
@@ -38826,8 +38826,9 @@ var Profile = function (_React$Component) {
     }, {
         key: 'getUserCitations',
         value: function getUserCitations() {
+            var user = this.props.params.user || this.state.username;
             _jquery2.default.ajax({
-                url: '/api/users/' + this.props.params.user,
+                url: '/api/users/' + user,
                 dataType: 'json',
                 cache: false,
                 success: function (data) {
@@ -38840,7 +38841,7 @@ var Profile = function (_React$Component) {
                     });
                 }.bind(this),
                 error: function (xhr, status, err) {
-                    console.error('/users/' + this.props.params.user, status, err.toString());
+                    console.error('/users/' + user, status, err.toString());
                 }.bind(this)
             });
         }
@@ -38864,8 +38865,7 @@ var Profile = function (_React$Component) {
         key: 'componentDidMount',
         value: function componentDidMount() {
             this.getUser();
-            this.getUserCitations();
-            this.timer = setInterval(this.getUserCitations.bind(), 2000);
+            this.timer = setInterval(this.getUserCitations.bind(this), 2000);
         }
     }, {
         key: 'componentWillUnmount',

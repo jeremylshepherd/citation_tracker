@@ -7,8 +7,8 @@ import $ from 'jquery';
 
 
 export default class Profile extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         
         this.state = {
             _id: '',
@@ -20,7 +20,6 @@ export default class Profile extends React.Component {
             citations: [],
             created: ''
         };
-        this.getUserCitations = this.getUserCitations.bind(this);
     }
     
     getUser() {
@@ -34,6 +33,7 @@ export default class Profile extends React.Component {
               _id: data._id,
               auth: true
             });
+            console.log('User got!');
         }.bind(this),
         error: function(xhr, status, err) {
           console.error('/api/me', status, err.toString());
@@ -43,8 +43,9 @@ export default class Profile extends React.Component {
     }
     
     getUserCitations() {
+        let user = this.props.params.user || this.state.username;
         $.ajax({
-        url: `/api/users/${this.props.params.user}` ,
+        url: `/api/users/${user}` ,
         dataType: 'json',
         cache: false,
         success: function(data) {
@@ -57,7 +58,7 @@ export default class Profile extends React.Component {
             });   
         }.bind(this),
         error: function(xhr, status, err) {
-          console.error(`/users/${this.props.params.user}`, status, err.toString());
+          console.error(`/users/${user}`, status, err.toString());
         }.bind(this)
       });
     }
@@ -79,8 +80,7 @@ export default class Profile extends React.Component {
     
     componentDidMount() {
         this.getUser();
-        this.getUserCitations();
-        this.timer = setInterval(this.getUserCitations.bind(), 2000);
+        this.timer = setInterval(this.getUserCitations.bind(this), 2000);
     }
     
     componentWillUnmount() {
@@ -98,7 +98,7 @@ export default class Profile extends React.Component {
         return (
             <div>
                 <Header user={this.state.user}/>
-                <h3 className="text-left">User: {this.state.username}</h3>
+                <h3 className="text-left" >User: {this.state.username}</h3>
                 <h3 className="text-left">Email: {this.state.email}</h3>
                 <h3 className="text-left">Since: {date}</h3>
                 <br/>
