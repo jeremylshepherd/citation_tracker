@@ -20,6 +20,8 @@ export default class Profile extends React.Component {
             citations: [],
             created: ''
         };
+        
+        this.editCite = this.editCite.bind(this);
     }
     
     getUser() {
@@ -71,6 +73,7 @@ export default class Profile extends React.Component {
           data: obj,
           success: (res) => {
               console.log(res.message);
+              this.getUserCitations();
           },
           error: (xhr, status, err) => {
             console.error(`/api/update/${obj.ticket}`, status, err.toString());
@@ -80,11 +83,7 @@ export default class Profile extends React.Component {
     
     componentDidMount() {
         this.getUser();
-        this.timer = setInterval(this.getUserCitations.bind(this), 2000);
-    }
-    
-    componentWillUnmount() {
-        clearInterval(this.timer);
+        this.getUserCitations();
     }
     
     render() {
@@ -92,7 +91,7 @@ export default class Profile extends React.Component {
         date = date.toLocaleDateString('en-us');
         let CiteForms = this.state.citations.map((c, i) => {
             return (
-                <CitationUpdateForm  key={i} {...c} update={this.editCite} id={`citation${i}`}/>
+                <CitationUpdateForm  key={i} {...c} update={this.editCite} id={`citation${i}`} username={this.state.username}/>
             );
         });
         return (

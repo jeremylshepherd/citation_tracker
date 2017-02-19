@@ -38594,6 +38594,16 @@ var Header = _react2.default.createClass({
         'Log In'
       )
     );
+
+    var brand = this.props.user ? _react2.default.createElement(
+      _reactRouter.Link,
+      { to: '/', className: 'navbar-brand' },
+      'Citation Tracker'
+    ) : _react2.default.createElement(
+      'a',
+      { href: '/', className: 'navbar-brand' },
+      'Citation Tracker'
+    );
     return _react2.default.createElement(
       'div',
       null,
@@ -38603,11 +38613,7 @@ var Header = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'container-fluid' },
-          _react2.default.createElement(
-            _reactRouter.Link,
-            { to: '/', className: 'navbar-brand' },
-            'Citation Tracker'
-          ),
+          brand,
           icon
         )
       ),
@@ -38799,6 +38805,8 @@ var Profile = function (_React$Component) {
             citations: [],
             created: ''
         };
+
+        _this.editCite = _this.editCite.bind(_this);
         return _this;
     }
 
@@ -38848,6 +38856,8 @@ var Profile = function (_React$Component) {
     }, {
         key: 'editCite',
         value: function editCite(obj) {
+            var _this2 = this;
+
             _jquery2.default.ajax({
                 url: '/api/update/' + obj.ticket,
                 dataType: 'json',
@@ -38855,6 +38865,7 @@ var Profile = function (_React$Component) {
                 data: obj,
                 success: function success(res) {
                     console.log(res.message);
+                    _this2.getUserCitations();
                 },
                 error: function error(xhr, status, err) {
                     console.error('/api/update/' + obj.ticket, status, err.toString());
@@ -38865,22 +38876,17 @@ var Profile = function (_React$Component) {
         key: 'componentDidMount',
         value: function componentDidMount() {
             this.getUser();
-            this.timer = setInterval(this.getUserCitations.bind(this), 2000);
-        }
-    }, {
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-            clearInterval(this.timer);
+            this.getUserCitations();
         }
     }, {
         key: 'render',
         value: function render() {
-            var _this2 = this;
+            var _this3 = this;
 
             var date = new Date(this.state.created);
             date = date.toLocaleDateString('en-us');
             var CiteForms = this.state.citations.map(function (c, i) {
-                return _react2.default.createElement(_CitationUpdateForm2.default, _extends({ key: i }, c, { update: _this2.editCite, id: 'citation' + i }));
+                return _react2.default.createElement(_CitationUpdateForm2.default, _extends({ key: i }, c, { update: _this3.editCite, id: 'citation' + i, username: _this3.state.username }));
             });
             return _react2.default.createElement(
                 'div',
