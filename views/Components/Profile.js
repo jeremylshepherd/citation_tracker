@@ -5,7 +5,7 @@ import Citations from './Citations';
 import $ from 'jquery';
 
 
-class Profile extends React.Component {
+export default class Profile extends React.Component {
     constructor() {
         super();
         
@@ -77,5 +77,3 @@ class Profile extends React.Component {
         );
     }
 }
-
-export default Profile;
