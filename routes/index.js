@@ -13,6 +13,7 @@ var ReactDOMServer = require("react-dom/server");
 var passport = require("passport");
 var crypto = require("crypto");
 var nodemailer = require('nodemailer');
+var cors = require("cors");
 
 require("../config/passport");
 
@@ -288,7 +289,7 @@ router.post('/api/update/:ticket', isLoggedIn, (req, res) => {
     });
 });
 
-router.get('/api/citations', isLoggedIn, (req, res) => {
+router.get('/api/citations', cors(), (req, res) => {
     Citation.find({}, (err, results) => {
        if(err){console.log(err);}
        res.json(results);
