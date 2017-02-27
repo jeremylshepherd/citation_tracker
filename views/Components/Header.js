@@ -4,7 +4,7 @@ import {Link} from 'react-router';
 var Header = React.createClass({
   render: function() {
     let icon = Object.keys(this.props.user).length > 0 ?
-        (<div className="navbar-form navbar-right">Logged in as <Link to={`/officer/${this.props.user.local.username}`}>{this.props.user.local.username}</Link> <a href="/logout" className="btn btn-danger">Log Out</a></div>) : 
+        (<div className="navbar-form navbar-right"><span className="text-primary">Logged in as <Link to={`/officer/${this.props.user.local.username}`}>{this.props.user.local.username}</Link></span> <a href="/logout" className="btn btn-danger">Log Out</a></div>) : 
         (<div className="navbar-form navbar-right">Please <Link to='/login' className="btn btn-primary" data-toggle="modal" data-target="#registerForm">Register</Link><span> or </span>
         <a href='/login' className="btn btn-success" data-toggle="modal" data-target="#loginForm">Log In</a></div>);
         

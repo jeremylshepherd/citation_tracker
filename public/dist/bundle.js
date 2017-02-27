@@ -37596,6 +37596,29 @@ module.exports = {
     return newStr.toUpperCase();
   },
 
+  compare: function compare(a, b) {
+    if (!Number.isNaN(+a) && a.length !== 0) {
+      return a - b;
+    }
+
+    if (!Number.isNaN(Date.parse(a)) && a.length >= 8) {
+      a = Date.parse(a);
+      b = Date.parse(b);
+    }
+
+    if (Number.isNaN(+a) && Number.isNaN(+b) && !Array.isArray(a)) {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+    }
+
+    if (Number.isNaN(+a) && Number.isNaN(+b) && Array.isArray(a)) {
+      a = a.join(', ').toLowerCase();
+      b = b.join(', ').toLowerCase();
+    }
+
+    return a < b ? -1 : a > b ? 1 : 0;
+  },
+
   validator: function validator(r) {
     if (!r.ticket || !r.make || !r.color || !r.tag || !r.violation.length || !r.location || !r.officer || r.date.length < 10 || r.time.length < 5) {
       return false;
@@ -38154,10 +38177,49 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Citations = _react2.default.createClass({
   displayName: 'Citations',
 
+  getInitialState: function getInitialState() {
+    return {
+      desc: false,
+      sortParam: 'date'
+    };
+  },
+
+  setSortParam: function setSortParam(e) {
+    var target = e.target;
+    var name = target.innerHTML;
+    name = name.toLowerCase();
+    if (name == 'license') {
+      name = 'tag';
+    }
+
+    if (name == 'employee #') {
+      name = 'employee';
+    }
+
+    if (name == 'ticket #') {
+      name = 'ticket';
+    }
+
+    this.setState({
+      sortParam: name,
+      desc: !this.state.desc
+    });
+  },
+
   render: function render() {
     var _this = this;
 
-    var citationNodes = this.props.data.map(function (x, i) {
+    var data = this.props.data.sort(function (a, b) {
+      var param = _this.state.sortParam;
+      if (param == 'unit') {
+        return (0, _helpers.compare)(a['officer'][param], b['officer'][param]); //To make work with nested data object on 'unit'
+      }
+      return (0, _helpers.compare)(a[param], b[param]);
+    });
+    if (this.state.desc) {
+      data = data.reverse();
+    }
+    var citationNodes = data.map(function (x, i) {
       var clName = (0, _helpers.expired)(x.date) ? 'danger' : '';
       var link = '/' + x.ticket;
       var unit = _this.props.auth ? _react2.default.createElement('span', { className: 'glyphicon glyphicon-pencil', 'data-toggle': 'modal', 'data-target': '#citation' + i }) : x.officer.unit;
@@ -38225,6 +38287,20 @@ var Citations = _react2.default.createClass({
         )
       );
     });
+    var headers = ['tag', 'state', 'make', 'model', 'color', 'year', 'violation', 'ticket', 'employee', 'date', 'unit'];
+    var headerNodes = headers.map(function (h, i) {
+      var style = _this.state.sortParam == h ? "bg-primary" : "";
+      var name = h == 'tag' ? 'license' : h;
+      if (h == 'unit' && _this.props.auth) {
+        name = 'Edit';
+      }
+      name = name.toUpperCase();
+      return _react2.default.createElement(
+        'th',
+        { key: i, className: style, onClick: _this.setSortParam },
+        name
+      );
+    });
     return _react2.default.createElement(
       'div',
       null,
@@ -38237,61 +38313,7 @@ var Citations = _react2.default.createClass({
           _react2.default.createElement(
             'tr',
             null,
-            _react2.default.createElement(
-              'td',
-              null,
-              'License'
-            ),
-            _react2.default.createElement(
-              'td',
-              null,
-              'State'
-            ),
-            _react2.default.createElement(
-              'td',
-              null,
-              'Make'
-            ),
-            _react2.default.createElement(
-              'td',
-              null,
-              'Model'
-            ),
-            _react2.default.createElement(
-              'td',
-              null,
-              'Color'
-            ),
-            _react2.default.createElement(
-              'td',
-              null,
-              'Year'
-            ),
-            _react2.default.createElement(
-              'td',
-              null,
-              'Violation'
-            ),
-            _react2.default.createElement(
-              'td',
-              null,
-              'Ticket #'
-            ),
-            _react2.default.createElement(
-              'td',
-              null,
-              'Employee #'
-            ),
-            _react2.default.createElement(
-              'td',
-              null,
-              'Date'
-            ),
-            _react2.default.createElement(
-              'td',
-              null,
-              this.props.auth ? "Edit" : "Unit"
-            )
+            headerNodes
           )
         ),
         _react2.default.createElement(
@@ -38321,6 +38343,8 @@ var _helpers = require('../../src/helpers');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var Form = _react2.default.createClass({
   displayName: 'Form',
 
@@ -38343,106 +38367,26 @@ var Form = _react2.default.createClass({
     };
   },
 
-  handleTicketInput: function handleTicketInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      ticket: input
-    });
-  },
+  handleInput: function handleInput(e) {
+    var target = e.target;
+    var value = (0, _helpers.cleanInput)(target.value);
+    var name = target.name;
 
-  handleMakeInput: function handleMakeInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      make: input
-    });
-  },
-
-  handleModelInput: function handleModelInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      model: input
-    });
-  },
-
-  handleColorInput: function handleColorInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      color: input
-    });
-  },
-
-  handleYearInput: function handleYearInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      year: input
-    });
-  },
-
-  handleTagInput: function handleTagInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      tag: input
-    });
-  },
-
-  handleStateInput: function handleStateInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      state: input.slice(0, 2)
-    });
-  },
-
-  handleViolationInput: function handleViolationInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    var arr = input.split(',');
-    arr = arr.map(function (r) {
-      return r.trim();
-    });
-    this.setState({
-      violation: arr
-    });
-  },
-
-  handleEmployeeInput: function handleEmployeeInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      employee: input
-    });
-  },
-
-  handleLocationInput: function handleLocationInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      location: input
-    });
-  },
-
-  handleDateInput: function handleDateInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      date: input
-    });
-  },
-
-  handleTimeInput: function handleTimeInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      time: input
-    });
-  },
-
-  handleOfficerInput: function handleOfficerInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      officer: input
-    });
-  },
-
-  handleUnitInput: function handleUnitInput(e) {
-    var input = (0, _helpers.cleanInput)(e.target.value);
-    this.setState({
-      unit: input
-    });
+    if (name == 'violation') {
+      var arr = value.split(',');
+      arr = arr.map(function (r) {
+        return r.trim();
+      });
+      this.setState({
+        violation: arr
+      });
+    } else if (name == 'state') {
+      this.setState({
+        state: value.slice(0, 2)
+      });
+    } else {
+      this.setState(_defineProperty({}, name, value));
+    }
   },
 
   handleCitationSubmit: function handleCitationSubmit() {
@@ -38481,16 +38425,6 @@ var Form = _react2.default.createClass({
 
   render: function render() {
     var submit = void 0;
-    // if(
-    //   !this.state.ticket ||
-    //   !this.state.make ||
-    //   !this.state.color || 
-    //   !this.state.tag || 
-    //   !this.state.violation.length || 
-    //   !this.state.location || 
-    //   !this.state.officer || 
-    //   this.state.date.length < 10 || 
-    //   this.state.time.length <5) {
     if (!(0, _helpers.validator)(this.state)) {
       submit = _react2.default.createElement('input', { type: 'button', className: 'btn btn-primary disabled', value: 'Enter' });
     } else {
@@ -38511,30 +38445,30 @@ var Form = _react2.default.createClass({
         null,
         'For example time and date should have a leading zero ex: 04:21 and 02/28/2016.'
       ),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Make (required)', value: this.state.make, onChange: this.handleMakeInput, required: true }),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Model', value: this.state.model, onChange: this.handleModelInput }),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Color (required)', value: this.state.color, onChange: this.handleColorInput, required: true }),
+      _react2.default.createElement('input', { name: 'make', type: 'text', className: 'form-control', placeholder: 'Make (required)', value: this.state.make, onChange: this.handleInput, required: true }),
+      _react2.default.createElement('input', { name: 'model', type: 'text', className: 'form-control', placeholder: 'Model', value: this.state.model, onChange: this.handleInput }),
+      _react2.default.createElement('input', { name: 'color', type: 'text', className: 'form-control', placeholder: 'Color (required)', value: this.state.color, onChange: this.handleInput, required: true }),
       _react2.default.createElement('br', null),
       _react2.default.createElement('br', null),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Year', value: this.state.year, onChange: this.handleYearInput }),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'License Plate No spaces. If no tag use NOTAG (required)', value: this.state.tag, onChange: this.handleTagInput, required: true }),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'State (Use standard abbreviation)', value: this.state.state, onChange: this.handleStateInput, required: true }),
+      _react2.default.createElement('input', { name: 'year', type: 'text', className: 'form-control', placeholder: 'Year', value: this.state.year, onChange: this.handleInput }),
+      _react2.default.createElement('input', { name: 'tag', type: 'text', className: 'form-control', placeholder: 'License Plate No spaces. If no tag use NOTAG (required)', value: this.state.tag, onChange: this.handleInput, required: true }),
+      _react2.default.createElement('input', { name: 'state', type: 'text', className: 'form-control', placeholder: 'State (Use standard abbreviation)', value: this.state.state, onChange: this.handleInput, required: true }),
       _react2.default.createElement('br', null),
       _react2.default.createElement('br', null),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Violation (required)', value: this.state.violation, onChange: this.handleViolationInput, required: true }),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Ticket Number (required)', value: this.state.ticket, onChange: this.handleTicketInput, required: true }),
+      _react2.default.createElement('input', { name: 'violation', type: 'text', className: 'form-control', placeholder: 'Violation (required)', value: this.state.violation, onChange: this.handleInput, required: true }),
+      _react2.default.createElement('input', { name: 'ticket', type: 'text', className: 'form-control', placeholder: 'Ticket Number (required)', value: this.state.ticket, onChange: this.handleInput, required: true }),
       _react2.default.createElement('br', null),
       _react2.default.createElement('br', null),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'employee', placeholder: 'Employee number', value: this.state.employee, onChange: this.handleEmployeeInput }),
+      _react2.default.createElement('input', { name: 'employee', type: 'text', className: 'form-control', id: 'employee', placeholder: 'Employee number', value: this.state.employee, onChange: this.handleInput }),
       _react2.default.createElement('br', null),
       _react2.default.createElement('br', null),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Location (required)', value: this.state.location, onChange: this.handleLocationInput, required: true }),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Date (MM/DD/YYYY required)', value: this.state.date, onChange: this.handleDateInput, required: true }),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Time (HH:MM required)', value: this.state.time, onChange: this.handleTimeInput, required: true }),
+      _react2.default.createElement('input', { name: 'location', type: 'text', className: 'form-control', placeholder: 'Location (required)', value: this.state.location, onChange: this.handleInput, required: true }),
+      _react2.default.createElement('input', { name: 'date', type: 'text', className: 'form-control', placeholder: 'Date (MM/DD/YYYY required)', value: this.state.date, onChange: this.handleInput, required: true }),
+      _react2.default.createElement('input', { name: 'time', type: 'text', className: 'form-control', placeholder: 'Time (HH:MM required)', value: this.state.time, onChange: this.handleInput, required: true }),
       _react2.default.createElement('br', null),
       _react2.default.createElement('br', null),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Officer (required)', value: this.state.officer, onChange: this.handleOfficerInput, required: true }),
-      _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Unit #', value: this.state.unit, onChange: this.handleUnitInput, required: true }),
+      _react2.default.createElement('input', { name: 'officer', type: 'text', className: 'form-control', placeholder: 'Officer (required)', value: this.state.officer, onChange: this.handleInput, required: true }),
+      _react2.default.createElement('input', { name: 'unit', type: 'text', className: 'form-control', placeholder: 'Unit #', value: this.state.unit, onChange: this.handleInput, required: true }),
       _react2.default.createElement('br', null),
       _react2.default.createElement('br', null),
       submit
@@ -38562,11 +38496,15 @@ var Header = _react2.default.createClass({
     var icon = Object.keys(this.props.user).length > 0 ? _react2.default.createElement(
       'div',
       { className: 'navbar-form navbar-right' },
-      'Logged in as ',
       _react2.default.createElement(
-        _reactRouter.Link,
-        { to: '/officer/' + this.props.user.local.username },
-        this.props.user.local.username
+        'span',
+        { className: 'text-primary' },
+        'Logged in as ',
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { to: '/officer/' + this.props.user.local.username },
+          this.props.user.local.username
+        )
       ),
       ' ',
       _react2.default.createElement(
