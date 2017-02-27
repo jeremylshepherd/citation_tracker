@@ -37597,7 +37597,7 @@ module.exports = {
   },
 
   compare: function compare(a, b) {
-    if (!Number.isNaN(+a)) {
+    if (!Number.isNaN(+a) && a.length !== 0) {
       return a - b;
     }
 
@@ -38024,12 +38024,12 @@ var Citations = _react2.default.createClass({
     });
     var headers = ['tag', 'state', 'make', 'model', 'color', 'year', 'violation', 'ticket', 'employee', 'date', 'unit'];
     var headerNodes = headers.map(function (h, i) {
-      var style = _this.state.sortParam == h ? "bg-info" : "";
+      var style = _this.state.sortParam == h ? "bg-primary" : "";
       var name = h == 'tag' ? 'license' : h;
       name = name.toUpperCase();
       return _react2.default.createElement(
         'th',
-        { className: style, onClick: _this.setSortParam },
+        { key: i, className: style, onClick: _this.setSortParam },
         name
       );
     });

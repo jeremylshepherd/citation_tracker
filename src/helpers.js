@@ -37,7 +37,7 @@ module.exports = {
     },
     
     compare: function(a, b) {
-      if(!Number.isNaN(+a)) {
+      if(!Number.isNaN(+a) && a.length !== 0) {
         return a - b;
       }
       
