@@ -21,5 +21,23 @@ module.exports = {
       }else{
         return false;
       }
+    },
+    
+    compare: function(a, b) {
+      if(typeof +a === 'number' && a.length < 3) {
+        return a - b;
+      }
+      
+      if(!Number.isNaN(Date.parse(a)) && a.length >= 8) {
+        a = Date.parse(a);
+        b = Date.parse(b);
+      }
+      
+      if(Number.isNaN(a) && Number.isNaN(b)) {
+        a = a.toLowerCase();
+        b = b.toLowerCase();
+      } 
+      
+      return (a<b) ? -1 : (a>b) ? 1 : 0;
     }
 };

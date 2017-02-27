@@ -18,7 +18,7 @@ var CitationApp = React.createClass({
       username: '',
       user: {},
       active: false,
-      auth: false
+      auth: false,
     });  
   },
   
@@ -55,21 +55,21 @@ var CitationApp = React.createClass({
   },
   
   addNewCite: function(obj) {
-        let cite = obj;
-        $.ajax({
-          url: '/api/new/citation',
-          dataType: 'json',
-          type: 'POST',
-          data: cite,
-          success: function(res) {
-            this.setState({addCite: false});
-            this.getCitations();
-          }.bind(this),
-          error: function(xhr, status, err) {
-            console.error('/api/new/citation', status, err.toString());
-          }.bind(this)
-        });
-    },
+    let cite = obj;
+    $.ajax({
+      url: '/api/new/citation',
+      dataType: 'json',
+      type: 'POST',
+      data: cite,
+      success: function(res) {
+        this.setState({addCite: false});
+        this.getCitations();
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error('/api/new/citation', status, err.toString());
+      }.bind(this)
+    });
+  },
   
   componentDidMount: function() {
     this.getCitations();
@@ -124,6 +124,7 @@ var CitationApp = React.createClass({
   
   render: function() {
     let data = JSON.parse(JSON.stringify(this.state.data));
+    
     let filtered = [];
     data.map((r) => {
       let query = this.state.query.toLowerCase();

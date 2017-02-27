@@ -37594,6 +37594,29 @@ module.exports = {
     }
     var newStr = newArr.join('');
     return newStr.toUpperCase();
+  },
+
+  compare: function compare(a, b) {
+    if (!Number.isNaN(+a)) {
+      return a - b;
+    }
+
+    if (!Number.isNaN(Date.parse(a)) && a.length >= 8) {
+      a = Date.parse(a);
+      b = Date.parse(b);
+    }
+
+    if (Number.isNaN(+a) && Number.isNaN(+b) && !Array.isArray(a)) {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+    }
+
+    if (Number.isNaN(+a) && Number.isNaN(+b) && Array.isArray(a)) {
+      a = a.join(', ').toLowerCase();
+      b = b.join(', ').toLowerCase();
+    }
+
+    return a < b ? -1 : a > b ? 1 : 0;
   }
 };
 
@@ -37759,6 +37782,7 @@ var CitationApp = _react2.default.createClass({
     var _this = this;
 
     var data = JSON.parse(JSON.stringify(this.state.data));
+
     var filtered = [];
     data.map(function (r) {
       var query = _this.state.query.toLowerCase();
@@ -37889,8 +37913,49 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Citations = _react2.default.createClass({
   displayName: 'Citations',
 
+  getInitialState: function getInitialState() {
+    return {
+      desc: false,
+      sortParam: 'date'
+    };
+  },
+
+  setSortParam: function setSortParam(e) {
+    var target = e.target;
+    var name = target.innerHTML;
+    name = name.toLowerCase();
+    if (name == 'license') {
+      name = 'tag';
+    }
+
+    if (name == 'employee #') {
+      name = 'employee';
+    }
+
+    if (name == 'ticket #') {
+      name = 'ticket';
+    }
+
+    this.setState({
+      sortParam: name,
+      desc: !this.state.desc
+    });
+  },
+
   render: function render() {
-    var citationNodes = this.props.data.map(function (x, i) {
+    var _this = this;
+
+    var data = this.props.data.sort(function (a, b) {
+      var param = _this.state.sortParam;
+      if (param == 'unit') {
+        return (0, _helpers.compare)(a['officer'][param], b['officer'][param]); //To make work with nested data object on 'unit'
+      }
+      return (0, _helpers.compare)(a[param], b[param]);
+    });
+    if (this.state.desc) {
+      data = data.reverse();
+    }
+    var citationNodes = data.map(function (x, i) {
       var clName = (0, _helpers.expired)(x.date) ? 'danger' : '';
       var link = '/' + x.ticket;
       return _react2.default.createElement(
@@ -37971,57 +38036,57 @@ var Citations = _react2.default.createClass({
             null,
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'License'
             ),
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'State'
             ),
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'Make'
             ),
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'Model'
             ),
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'Color'
             ),
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'Year'
             ),
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'Violation'
             ),
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'Ticket #'
             ),
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'Employee #'
             ),
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'Date'
             ),
             _react2.default.createElement(
               'td',
-              null,
+              { onClick: this.setSortParam },
               'Unit'
             )
           )
