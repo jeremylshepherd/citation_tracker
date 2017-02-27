@@ -37564,7 +37564,7 @@ _reactDom2.default.render(_react2.default.createElement(
     _react2.default.createElement(_reactRouter.Route, { path: '/officer/:user', component: _Profile2.default })
 ), node);
 
-},{"../views/Components/CitationApp.js":244,"../views/Components/Profile.js":250,"../views/Components/RegistrationForm.js":251,"../views/Components/Ticket.js":252,"react":241,"react-dom":16,"react-router":43}],243:[function(require,module,exports){
+},{"../views/Components/CitationApp.js":244,"../views/Components/Profile.js":251,"../views/Components/RegistrationForm.js":252,"../views/Components/Ticket.js":253,"react":241,"react-dom":16,"react-router":43}],243:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -37666,6 +37666,10 @@ var _Form = require('./Form');
 
 var _Form2 = _interopRequireDefault(_Form);
 
+var _Flash = require('./Flash');
+
+var _Flash2 = _interopRequireDefault(_Flash);
+
 var _helpers = require('../../src/helpers');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -37681,7 +37685,9 @@ var CitationApp = _react2.default.createClass({
       username: '',
       user: {},
       active: false,
-      auth: false
+      auth: false,
+      message: '',
+      success: false
     };
   },
 
@@ -37691,9 +37697,15 @@ var CitationApp = _react2.default.createClass({
       dataType: 'json',
       cache: false,
       success: function (data) {
+        if (!this.state.auth) {
+          this.setState({
+            message: data.message,
+            success: true
+          });
+        }
         this.setState({
           user: data,
-          username: data.username,
+          username: data.local.username,
           auth: true
         });
       }.bind(this),
@@ -37725,11 +37737,18 @@ var CitationApp = _react2.default.createClass({
       type: 'POST',
       data: cite,
       success: function (res) {
-        this.setState({ addCite: false });
+        this.setState({
+          addCite: false,
+          message: res.message,
+          success: true
+        });
         this.getCitations();
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/api/new/citation', status, err.toString());
+        this.setState({
+          message: err.message
+        });
       }.bind(this)
     });
   },
@@ -37737,6 +37756,21 @@ var CitationApp = _react2.default.createClass({
   componentDidMount: function componentDidMount() {
     this.getCitations();
     this.getUser();
+  },
+
+  componentDidUpdate: function componentDidUpdate() {
+    if (this.state.message) {
+      this.clearFlash();
+    }
+  },
+
+  clearFlash: function clearFlash() {
+    var _this = this;
+
+    setTimeout(function () {
+      console.log('timer activated');
+      _this.setState({ message: '', success: false });
+    }, 10000);
   },
 
   handleQueryInput: function handleQueryInput(e) {
@@ -37786,20 +37820,20 @@ var CitationApp = _react2.default.createClass({
   },
 
   render: function render() {
-    var _this = this;
+    var _this2 = this;
 
     var data = JSON.parse(JSON.stringify(this.state.data));
     var filtered = [];
     data.map(function (r) {
-      var query = _this.state.query.toLowerCase();
+      var query = _this2.state.query.toLowerCase();
 
-      if (!_this.state.query && !_this.state.active) {
+      if (!_this2.state.query && !_this2.state.active) {
         filtered = data;
-      } else if (!_this.state.query && _this.state.active) {
+      } else if (!_this2.state.query && _this2.state.active) {
         if (!(0, _helpers.expired)(r.date)) {
           filtered.push(r);
         }
-      } else if (_this.state.query && _this.state.active) {
+      } else if (_this2.state.query && _this2.state.active) {
         if (!(0, _helpers.expired)(r.date) && (0, _helpers.queryCheck)(r, query)) {
           filtered.push(r);
         }
@@ -37841,7 +37875,7 @@ var CitationApp = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(_Header2.default, { user: this.state.user }),
+        _react2.default.createElement(_Header2.default, { user: this.state.user, message: this.state.message, success: this.state.success }),
         _react2.default.createElement(
           'div',
           null,
@@ -37870,7 +37904,7 @@ var CitationApp = _react2.default.createClass({
           ),
           _react2.default.createElement(
             'div',
-            { className: 'pull-right' },
+            { className: 'pull-right act-group' },
             _react2.default.createElement(
               'span',
               { className: this.state.active ? "btn btn-success act" : "btn btn-default act", onClick: this.toggleActive },
@@ -37903,7 +37937,7 @@ var CitationApp = _react2.default.createClass({
 
 module.exports = CitationApp;
 
-},{"../../src/helpers":243,"./Citations":246,"./Form":247,"./Header":248,"./LoginForm":249,"./RegistrationForm":251,"./TicketFooter":253,"bootstrap-jquery":1,"jquery":15,"react":241}],245:[function(require,module,exports){
+},{"../../src/helpers":243,"./Citations":246,"./Flash":247,"./Form":248,"./Header":249,"./LoginForm":250,"./RegistrationForm":252,"./TicketFooter":254,"bootstrap-jquery":1,"jquery":15,"react":241}],245:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -38303,10 +38337,10 @@ var Citations = _react2.default.createClass({
     });
     return _react2.default.createElement(
       'div',
-      null,
+      { className: 'table-responsive' },
       _react2.default.createElement(
         'table',
-        { className: 'table table-striped table-hover table-bordered table-responsive' },
+        { className: 'table table-striped table-hover table-condensed' },
         _react2.default.createElement(
           'thead',
           null,
@@ -38329,6 +38363,55 @@ var Citations = _react2.default.createClass({
 module.exports = Citations;
 
 },{"../../src/helpers.js":243,"react":241,"react-router":43}],247:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Flash = function (_React$Component) {
+    _inherits(Flash, _React$Component);
+
+    function Flash(props) {
+        _classCallCheck(this, Flash);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Flash).call(this, props));
+    }
+
+    _createClass(Flash, [{
+        key: "render",
+        value: function render() {
+            var style = this.props.success ? "alert-success" : "alert-danger";
+            var icon = this.props.success ? "fa fa-hand-spock-o" : "fa fa-hand-stop-o";
+            return _react2.default.createElement(
+                "div",
+                { className: "alert " + style + " col-xs-12", role: "alert" },
+                _react2.default.createElement("span", { className: icon }),
+                this.props.message
+            );
+        }
+    }]);
+
+    return Flash;
+}(_react2.default.Component);
+
+exports.default = Flash;
+
+},{"react":241}],248:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38478,12 +38561,16 @@ var Form = _react2.default.createClass({
 
 module.exports = Form;
 
-},{"../../src/helpers":243,"./TicketFooter":253,"react":241}],248:[function(require,module,exports){
+},{"../../src/helpers":243,"./TicketFooter":254,"react":241}],249:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _Flash = require('./Flash');
+
+var _Flash2 = _interopRequireDefault(_Flash);
 
 var _reactRouter = require('react-router');
 
@@ -38542,6 +38629,7 @@ var Header = _react2.default.createClass({
       { href: '/', className: 'navbar-brand' },
       'Citation Tracker'
     );
+    var flash = this.props.message ? _react2.default.createElement(_Flash2.default, { message: this.props.message, success: this.props.success }) : _react2.default.createElement('span', null);
     return _react2.default.createElement(
       'div',
       null,
@@ -38555,6 +38643,7 @@ var Header = _react2.default.createClass({
           icon
         )
       ),
+      flash,
       _react2.default.createElement(
         'header',
         null,
@@ -38576,7 +38665,7 @@ var Header = _react2.default.createClass({
 
 module.exports = Header;
 
-},{"react":241,"react-router":43}],249:[function(require,module,exports){
+},{"./Flash":247,"react":241,"react-router":43}],250:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38684,7 +38773,7 @@ var LoginForm = _react2.default.createClass({
 
 module.exports = LoginForm;
 
-},{"./Header":248,"react":241}],250:[function(require,module,exports){
+},{"./Header":249,"react":241}],251:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -38741,7 +38830,9 @@ var Profile = function (_React$Component) {
             auth: false,
             edit: false,
             citations: [],
-            created: ''
+            created: '',
+            message: '',
+            success: false
         };
 
         _this.editCite = _this.editCite.bind(_this);
@@ -38761,7 +38852,6 @@ var Profile = function (_React$Component) {
                         _id: data._id,
                         auth: true
                     });
-                    console.log('User got!');
                 }.bind(this),
                 error: function (xhr, status, err) {
                     console.error('/api/me', status, err.toString());
@@ -38783,7 +38873,9 @@ var Profile = function (_React$Component) {
                         created: data.created,
                         username: data.username,
                         email: data.email,
-                        edit: data.edit
+                        edit: data.edit,
+                        message: data.message,
+                        success: true
                     });
                 }.bind(this),
                 error: function (xhr, status, err) {
@@ -38802,8 +38894,11 @@ var Profile = function (_React$Component) {
                 type: 'POST',
                 data: obj,
                 success: function success(res) {
-                    console.log(res.message);
                     _this2.getUserCitations();
+                    _this2.setState({
+                        message: res.message,
+                        success: true
+                    });
                 },
                 error: function error(xhr, status, err) {
                     console.error('/api/update/' + obj.ticket, status, err.toString());
@@ -38813,23 +38908,30 @@ var Profile = function (_React$Component) {
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
+            var _this3 = this;
+
             this.getUser();
             this.getUserCitations();
+            if (this.state.message) {
+                setTimeout(function () {
+                    _this3.setState({ message: '', success: false });
+                }, 5000);
+            }
         }
     }, {
         key: 'render',
         value: function render() {
-            var _this3 = this;
+            var _this4 = this;
 
             var date = new Date(this.state.created);
             date = date.toLocaleDateString('en-us');
             var CiteForms = this.state.citations.map(function (c, i) {
-                return _react2.default.createElement(_CitationUpdateForm2.default, _extends({ key: i }, c, { update: _this3.editCite, id: 'citation' + i, username: _this3.state.username }));
+                return _react2.default.createElement(_CitationUpdateForm2.default, _extends({ key: i }, c, { update: _this4.editCite, id: 'citation' + i, username: _this4.state.username }));
             });
             return _react2.default.createElement(
                 'div',
                 null,
-                _react2.default.createElement(_Header2.default, { user: this.state.user }),
+                _react2.default.createElement(_Header2.default, { user: this.state.user, message: this.state.message, success: this.state.success }),
                 _react2.default.createElement(
                     'h3',
                     { className: 'text-left' },
@@ -38866,7 +38968,7 @@ var Profile = function (_React$Component) {
 
 exports.default = Profile;
 
-},{"./CitationUpdateForm":245,"./Citations":246,"./Header":248,"jquery":15,"react":241,"react-router":43}],251:[function(require,module,exports){
+},{"./CitationUpdateForm":245,"./Citations":246,"./Header":249,"jquery":15,"react":241,"react-router":43}],252:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38994,7 +39096,7 @@ var RegistrationForm = _react2.default.createClass({
 
 module.exports = RegistrationForm;
 
-},{"react":241}],252:[function(require,module,exports){
+},{"react":241}],253:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -39175,7 +39277,7 @@ var Ticket = _react2.default.createClass({
 
 module.exports = Ticket;
 
-},{"../../src/helpers":243,"./Citations":246,"./Form":247,"./Header":248,"./LoginForm":249,"./RegistrationForm":251,"./TicketFooter":253,"bootstrap-jquery":1,"jquery":15,"react":241,"react-router":43}],253:[function(require,module,exports){
+},{"../../src/helpers":243,"./Citations":246,"./Form":248,"./Header":249,"./LoginForm":250,"./RegistrationForm":252,"./TicketFooter":254,"bootstrap-jquery":1,"jquery":15,"react":241,"react-router":43}],254:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -39213,47 +39315,47 @@ var TicketFooter = _react2.default.createClass({
         _react2.default.createElement(
           'li',
           null,
-          '1. NO PARKING ZONE'
+          '1.  NO PARKING ZONE'
         ),
         _react2.default.createElement(
           'li',
           null,
-          '2. RESERVED SPACE'
+          '2.  RESERVED SPACE'
         ),
         _react2.default.createElement(
           'li',
           null,
-          '3. BLOCKING DRIVEWAY'
+          '3.  BLOCKING DRIVEWAY'
         ),
         _react2.default.createElement(
           'li',
           null,
-          '4. EMERGENCY DRIVEWAY'
+          '4.  EMERGENCY DRIVEWAY'
         ),
         _react2.default.createElement(
           'li',
           null,
-          '5. WITHIN 10 (TEN) FEET OF A FIRE HYDRANT'
+          '5.  WITHIN 10 (TEN) FEET OF A FIRE HYDRANT'
         ),
         _react2.default.createElement(
           'li',
           null,
-          '6. PARKING WITHOUT A PERMIT'
+          '6.  PARKING WITHOUT A PERMIT'
         ),
         _react2.default.createElement(
           'li',
           null,
-          '7. PARKING IN AN UNASSIGNED SPACE'
+          '7.  PARKING IN AN UNASSIGNED SPACE'
         ),
         _react2.default.createElement(
           'li',
           null,
-          '8. PARKING IN A LOADING DOCK AREA'
+          '8.  PARKING IN A LOADING DOCK AREA'
         ),
         _react2.default.createElement(
           'li',
           null,
-          '9. DOUBLE PARKING'
+          '9.  DOUBLE PARKING'
         ),
         _react2.default.createElement(
           'li',

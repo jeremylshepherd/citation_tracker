@@ -7,6 +7,7 @@ import LoginForm from './LoginForm';
 import Header from './Header';
 import TicketFooter from './TicketFooter';
 import Form from './Form';
+import Flash from './Flash';
 import {expired, queryCheck } from '../../src/helpers';
 
 var CitationApp = React.createClass({
@@ -18,7 +19,9 @@ var CitationApp = React.createClass({
       username: '',
       user: {},
       active: false,
-      auth: false
+      auth: false,
+      message: '',
+      success: false
     });  
   },
   
@@ -28,9 +31,15 @@ var CitationApp = React.createClass({
         dataType: 'json',
         cache: false,
         success: function(data) {
+          if(!this.state.auth){
+            this.setState({
+              message: data.message,
+              success: true
+            });
+          }
           this.setState({
               user: data,
-              username: data.username,
+              username: data.local.username,
               auth: true
             });
         }.bind(this),
@@ -62,11 +71,18 @@ var CitationApp = React.createClass({
           type: 'POST',
           data: cite,
           success: function(res) {
-            this.setState({addCite: false});
+            this.setState({
+              addCite: false, 
+              message: res.message,
+              success: true
+            });
             this.getCitations();
           }.bind(this),
           error: function(xhr, status, err) {
             console.error('/api/new/citation', status, err.toString());
+            this.setState({
+              message: err.message
+            });
           }.bind(this)
         });
     },
@@ -74,6 +90,19 @@ var CitationApp = React.createClass({
   componentDidMount: function() {
     this.getCitations();
     this.getUser();
+  },
+  
+  componentDidUpdate: function() {
+    if(this.state.message){
+      this.clearFlash();
+    }
+  },
+  
+  clearFlash: function() {
+    setTimeout(() => {
+      console.log('timer activated');
+      this.setState({message: '', success: false});
+    }, 10000);
   },
   
   handleQueryInput: function(e) {
@@ -160,7 +189,7 @@ var CitationApp = React.createClass({
     return (
       <div>
         <div>
-          <Header user={this.state.user}/>
+          <Header user={this.state.user} message={this.state.message} success={this.state.success}/>
           <div>
             {form}
           </div>
@@ -171,7 +200,7 @@ var CitationApp = React.createClass({
             <div className="pull-left">
               <h2><span className="label label-primary pull-left">{count}</span></h2>
             </div>
-            <div className="pull-right">
+            <div className="pull-right act-group">
               <span className={this.state.active ? "btn btn-success act" : "btn btn-default act"} onClick={this.toggleActive}>Active</span>
               <span className={this.state.active ? "btn btn-default act" : "btn btn-success act"} onClick={this.toggleActive}>All</span>
             </div>

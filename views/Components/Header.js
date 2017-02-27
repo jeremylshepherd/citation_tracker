@@ -1,4 +1,5 @@
 import React from 'react';
+import Flash from './Flash';
 import {Link} from 'react-router';
 
 var Header = React.createClass({
@@ -11,6 +12,7 @@ var Header = React.createClass({
     let brand = this.props.user ? 
     (<Link to='/' className="navbar-brand">Citation Tracker</Link>):
     (<a href='/' className="navbar-brand">Citation Tracker</a>);
+    let flash = this.props.message ? <Flash message={this.props.message} success={this.props.success} /> : <span></span>;
     return (
       <div>
         <nav className="navbar navbar-default navbar-fixed-top">
@@ -19,6 +21,7 @@ var Header = React.createClass({
             {icon}
           </div>
         </nav>
+        {flash}
         <header>
           <h1><img className="patch" src="/dist/expandedPatch.svg"/> Good Samaritan Campus Police</h1>
           <h3>Citation Application</h3>

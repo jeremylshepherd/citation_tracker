@@ -77,8 +77,8 @@ var Citations = React.createClass({
         );
     });
     return (
-      <div>
-          <table className="table table-striped table-hover table-bordered table-responsive">
+      <div className="table-responsive">
+          <table className="table table-striped table-hover table-condensed">
             <thead>
               <tr>
                 {headerNodes}

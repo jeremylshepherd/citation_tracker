@@ -189,14 +189,9 @@ router.get('/logout', (req, res) => {
 ****************______________API Routing______________************************
 ******************************************************************************/
 
-
-router.post('/test', function(req, res) {
-   res.json(req.body); 
-});
-
 router.get('/api/me', isLoggedIn, (req, res) => {
     if(req.user === undefined) {
-        res.json({});
+        res.json({message: "You must log in first!"});
     }else{
         var user = {
             local: {}
@@ -205,6 +200,7 @@ router.get('/api/me', isLoggedIn, (req, res) => {
         user.local.email = req.user.local.email;
         user.local.created = req.user.local.created;
         user.local.id = req.user.local.id;
+        user.message = "Who's awesome you're awesome. Thanks for signing in!";
         res.json(user);
     }
 });
@@ -229,7 +225,7 @@ router.get('/api/users/:username', isLoggedIn, (req, res) => {
 
 router.post('/api/new/citation', isLoggedIn, (req, res) => {
     User.findOne({'_id': req.user._id}, (err, user) => {
-        if(err)  {console.log(err);}
+        if(err)  {res.json({message:err});}
        
         var newCite = new Citation({
             ticket: req.body.ticket,
@@ -250,7 +246,8 @@ router.post('/api/new/citation', isLoggedIn, (req, res) => {
         newCite.save((err) => {
           if(err) {console.log(err);}
           console.log('Citation saved!');
-          res.json('Citation saved');
+          req.flash('recordSuccess', 'New Citation entered');
+          res.json({message: 'Citation saved'});
       });
     });
 });
@@ -259,7 +256,7 @@ router.post('/api/update/:ticket', isLoggedIn, (req, res) => {
     User.findOne({'_id': req.user._id}, (err, user) => {
         if(err)  {console.log(err);}
         Citation.findOne({'ticket': req.params.ticket}, (err, citation) => {
-            if(err)  {console.log(err);}
+            if(err)  {res.json({message:err});}
             
             if(user._id.toString() === citation.creator.toString()){
                 citation.ticket = req.body.ticket;
@@ -279,15 +276,18 @@ router.post('/api/update/:ticket', isLoggedIn, (req, res) => {
                 citation.save((err) => {
                   if(err) {console.log(err);}
                   console.log('Citation updated!');
-                  res.json({message:'Citation saved'});
+                  req.flash('recordSuccess', 'Citation Updated');
+                  res.json({message:'Citation updated'});
                 });
             }else{
                 console.error("You cannot edit another's citations!");
+                req.flash('illegalAction', "You cannot edit another's citations!");
                 return res.status('500').json({message:"You cannot edit another's citations!"});
             }
         });
     });
 });
+
 
 router.get('/api/citations', cors(), (req, res) => {
     Citation.find({}, (err, results) => {

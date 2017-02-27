@@ -6264,8 +6264,10 @@ table {
   position: relative;
   min-width: 180px; }
 
-.act {
-  width: 85px; }
+.act-group {
+  margin-top: 20px; }
+  .act-group .act {
+    width: 85px; }
 
 @media screen and (max-width: 967px) {
   .container-fluid {

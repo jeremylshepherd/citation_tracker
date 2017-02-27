@@ -18,7 +18,9 @@ export default class Profile extends React.Component {
             auth: false,
             edit: false,
             citations: [],
-            created: ''
+            created: '',
+            message: '',
+            success: false
         };
         
         this.editCite = this.editCite.bind(this);
@@ -30,12 +32,11 @@ export default class Profile extends React.Component {
         dataType: 'json',
         cache: false,
         success: function(data) {
-          this.setState({
-              user: data,
-              _id: data._id,
-              auth: true
+            this.setState({
+                user: data,
+                _id: data._id,
+                auth: true
             });
-            console.log('User got!');
         }.bind(this),
         error: function(xhr, status, err) {
           console.error('/api/me', status, err.toString());
@@ -56,7 +57,9 @@ export default class Profile extends React.Component {
               created: data.created,
               username: data.username,
               email: data.email,
-              edit: data.edit
+              edit: data.edit,
+              message: data.message,
+              success: true
             });   
         }.bind(this),
         error: function(xhr, status, err) {
@@ -72,8 +75,11 @@ export default class Profile extends React.Component {
           type: 'POST',
           data: obj,
           success: (res) => {
-              console.log(res.message);
               this.getUserCitations();
+              this.setState({
+                  message: res.message,
+                  success: true
+              });
           },
           error: (xhr, status, err) => {
             console.error(`/api/update/${obj.ticket}`, status, err.toString());
@@ -84,6 +90,9 @@ export default class Profile extends React.Component {
     componentDidMount() {
         this.getUser();
         this.getUserCitations();
+        if(this.state.message){
+            setTimeout(() => {this.setState({message: '', success: false})}, 5000);
+        }
     }
     
     render() {
@@ -96,7 +105,7 @@ export default class Profile extends React.Component {
         });
         return (
             <div>
-                <Header user={this.state.user}/>
+                <Header user={this.state.user} message={this.state.message} success={this.state.success}/>
                 <h3 className="text-left" >User: {this.state.username}</h3>
                 <h3 className="text-left">Email: {this.state.email}</h3>
                 <h3 className="text-left">Since: {date}</h3>
