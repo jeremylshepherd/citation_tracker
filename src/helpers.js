@@ -36,6 +36,29 @@ module.exports = {
       return newStr.toUpperCase();
     },
     
+    compare: function(a, b) {
+      if(!Number.isNaN(+a) && a.length !== 0) {
+        return a - b;
+      }
+      
+      if(!Number.isNaN(Date.parse(a)) && a.length >= 8) {
+        a = Date.parse(a);
+        b = Date.parse(b);
+      }
+      
+      if(Number.isNaN(+a) && Number.isNaN(+b)  && !Array.isArray(a)) {
+        a = a.toLowerCase();
+        b = b.toLowerCase();
+      }
+      
+      if(Number.isNaN(+a) && Number.isNaN(+b)  && Array.isArray(a)) {
+        a = a.join(', ').toLowerCase();
+        b = b.join(', ').toLowerCase();
+      }
+      
+      return (a<b) ? -1 : (a>b) ? 1 : 0;
+    },
+    
     validator: function(r) {
        if(
         !r.ticket ||
