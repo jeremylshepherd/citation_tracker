@@ -16,3 +16,12 @@
 <% if(messages.signupMessage) {%>
     <div class="alert alert-danger col-xs-12" role="alert"><span class="fa fa-hand-stop-o"></span><%= messages.signupMessage%></div><br/>
 <% } %>
+<% if(messages.illegalAction) {%>
+    <div class="alert alert-danger col-xs-12" role="alert"><span class="fa fa-hand-stop-o"></span><%= messages.illegalAction%></div><br/>
+<% } %>
+<% if(messages.recordSuccess) {%>
+    <div class="alert alert-success col-xs-12" role="alert"><span class="fa fa-hand-spock-o"></span><%= messages.recordSuccess%></div><br/>
+<% } %>
+<% if(messages.recordError) {%>
+    <div class="alert alert-danger col-xs-12" role="alert"><span class="fa fa-hand-stop-o"></span><%= messages.recordError%></div><br/>
+<% } %>

@@ -185,23 +185,9 @@ router.get('/logout', (req, res) => {
     res.redirect('/login');
 });
 
-router.post('/buffer', (req, res) => {
-    var token;
-    crypto.randomBytes(20, (err, buf) => {
-        if (err) throw err;
-        token =  buf.toString('hex');
-        res.json(token);
-    }); 
-});
-
 /******************************************************************************
 ****************______________API Routing______________************************
 ******************************************************************************/
-
-
-router.post('/test', function(req, res) {
-   res.json(req.body); 
-});
 
 router.get('/api/me', isLoggedIn, (req, res) => {
     if(req.user === undefined) {
@@ -225,6 +211,8 @@ router.get('/api/users/:username', isLoggedIn, (req, res) => {
        Citation.find({'creator' : user._id}, (err, citations) => {
            if(err) {res.json(err);}
            let obj = {};
+           obj._id = user._id;
+           obj.edit = req.user._id.toString() == user._id.toString() ? true : false;
            obj.username = user.local.username;
            obj.email = user.local.email;
            obj.created = user.local.created;
@@ -257,10 +245,48 @@ router.post('/api/new/citation', isLoggedIn, (req, res) => {
         newCite.save((err) => {
           if(err) {console.log(err);}
           console.log('Citation saved!');
+          req.flash('recordSuccess', 'New Citation entered');
           res.json('Citation saved');
       });
     });
 });
+
+router.post('/api/update/:ticket', isLoggedIn, (req, res) => {
+    User.findOne({'_id': req.user._id}, (err, user) => {
+        if(err)  {console.log(err);}
+        Citation.findOne({'ticket': req.params.ticket}, (err, citation) => {
+            if(err)  {console.log(err);}
+            
+            if(user._id.toString() === citation.creator.toString()){
+                citation.ticket = req.body.ticket;
+                citation.tag = req.body.tag;
+                citation.make = req.body.make;
+                citation.model = req.body.model;
+                citation.year = req.body.year;
+                citation.color = req.body.color;
+                citation.state = req.body.state;
+                citation.violation = req.body.violation;
+                citation.location = req.body.location;
+                citation.date = req.body.date;
+                citation.time = req.body.time;
+                citation.officer  = {name: req.body.officer.name, unit: req.body.officer.unit};
+                citation.employee = req.body.employee;
+                
+                citation.save((err) => {
+                  if(err) {console.log(err);}
+                  console.log('Citation updated!');
+                  req.flash('recordSuccess', 'Citation Updated');
+                  res.json({message:'Citation saved'});
+                });
+            }else{
+                console.error("You cannot edit another's citations!");
+                req.flash('illegalAction', "You cannot edit another's citations!");
+                return res.status('500').json({message:"You cannot edit another's citations!"});
+            }
+        });
+    });
+});
+
 
 router.get('/api/citations', cors(), (req, res) => {
     Citation.find({}, (err, results) => {
