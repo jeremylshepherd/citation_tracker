@@ -57,9 +57,7 @@ export default class Profile extends React.Component {
               created: data.created,
               username: data.username,
               email: data.email,
-              edit: data.edit,
-              message: data.message,
-              success: true
+              edit: data.edit
             });   
         }.bind(this),
         error: function(xhr, status, err) {
@@ -90,8 +88,13 @@ export default class Profile extends React.Component {
     componentDidMount() {
         this.getUser();
         this.getUserCitations();
-        if(this.state.message){
-            setTimeout(() => {this.setState({message: '', success: false})}, 5000);
+    }
+    
+    componentDidUpdate() {
+        if(this.state.message) {
+            setTimeout(() => {
+                this.setState({message: '', sucess: false});
+            }, 5000);
         }
     }
     

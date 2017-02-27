@@ -37770,7 +37770,7 @@ var CitationApp = _react2.default.createClass({
     setTimeout(function () {
       console.log('timer activated');
       _this.setState({ message: '', success: false });
-    }, 10000);
+    }, 5000);
   },
 
   handleQueryInput: function handleQueryInput(e) {
@@ -38873,9 +38873,7 @@ var Profile = function (_React$Component) {
                         created: data.created,
                         username: data.username,
                         email: data.email,
-                        edit: data.edit,
-                        message: data.message,
-                        success: true
+                        edit: data.edit
                     });
                 }.bind(this),
                 error: function (xhr, status, err) {
@@ -38908,13 +38906,17 @@ var Profile = function (_React$Component) {
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var _this3 = this;
-
             this.getUser();
             this.getUserCitations();
+        }
+    }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+            var _this3 = this;
+
             if (this.state.message) {
                 setTimeout(function () {
-                    _this3.setState({ message: '', success: false });
+                    _this3.setState({ message: '', sucess: false });
                 }, 5000);
             }
         }

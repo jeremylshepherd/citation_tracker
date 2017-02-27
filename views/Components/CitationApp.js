@@ -102,7 +102,7 @@ var CitationApp = React.createClass({
     setTimeout(() => {
       console.log('timer activated');
       this.setState({message: '', success: false});
-    }, 10000);
+    }, 5000);
   },
   
   handleQueryInput: function(e) {

@@ -6262,7 +6262,7 @@ table {
 .VioDrop {
   z-index: 1000;
   position: relative;
-  min-width: 180px; }
+  min-width: 200px; }
 
 .act-group {
   margin-top: 20px; }
