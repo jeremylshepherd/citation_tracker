@@ -38022,73 +38022,31 @@ var Citations = _react2.default.createClass({
         )
       );
     });
+    var headers = ['tag', 'state', 'make', 'model', 'color', 'year', 'violation', 'ticket', 'employee', 'date', 'unit'];
+    var headerNodes = headers.map(function (h, i) {
+      var style = _this.state.sortParam == h ? "bg-info" : "";
+      var name = h == 'tag' ? 'license' : h;
+      name = name.toUpperCase();
+      return _react2.default.createElement(
+        'th',
+        { className: style, onClick: _this.setSortParam },
+        name
+      );
+    });
+
     return _react2.default.createElement(
       'div',
-      null,
+      { className: 'table-responsive' },
       _react2.default.createElement(
         'table',
-        { className: 'table table-striped table-hover table-bordered table-responsive' },
+        { className: 'table table-striped table-hover table-condensed' },
         _react2.default.createElement(
           'thead',
           null,
           _react2.default.createElement(
             'tr',
             null,
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'License'
-            ),
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'State'
-            ),
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'Make'
-            ),
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'Model'
-            ),
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'Color'
-            ),
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'Year'
-            ),
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'Violation'
-            ),
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'Ticket #'
-            ),
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'Employee #'
-            ),
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'Date'
-            ),
-            _react2.default.createElement(
-              'td',
-              { onClick: this.setSortParam },
-              'Unit'
-            )
+            headerNodes
           )
         ),
         _react2.default.createElement(
@@ -38349,11 +38307,15 @@ var Header = _react2.default.createClass({
     var icon = Object.keys(this.props.user).length > 0 ? _react2.default.createElement(
       'div',
       { className: 'navbar-form navbar-right' },
-      'Logged in as ',
       _react2.default.createElement(
-        _reactRouter.Link,
-        { to: '/officer/' + this.props.user.local.username },
-        this.props.user.local.username
+        'span',
+        { className: 'text-primary' },
+        'Logged in as ',
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { to: '/officer/' + this.props.user.local.username },
+          this.props.user.local.username
+        )
       ),
       ' ',
       _react2.default.createElement(

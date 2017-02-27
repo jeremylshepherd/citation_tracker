@@ -62,22 +62,22 @@ var Citations = React.createClass({
         </tr>
       );
     });
+    let headers = ['tag', 'state', 'make', 'model', 'color', 'year', 'violation', 'ticket', 'employee', 'date', 'unit'];
+    let headerNodes = headers.map((h, i) => {
+        let style = this.state.sortParam == h ? "bg-info" : "";
+        let name = h == 'tag' ? 'license' : h;
+        name = name.toUpperCase();
+        return (
+          <th className={style} onClick={this.setSortParam}>{name}</th>
+        );
+    });
+    
     return (
-      <div>
-          <table className="table table-striped table-hover table-bordered table-responsive">
+      <div className="table-responsive">
+          <table className="table table-striped table-hover table-condensed">
             <thead>
               <tr>
-                <td onClick={this.setSortParam}>License</td>
-                <td onClick={this.setSortParam}>State</td>
-                <td onClick={this.setSortParam}>Make</td>
-                <td onClick={this.setSortParam}>Model</td>
-                <td onClick={this.setSortParam}>Color</td>
-                <td onClick={this.setSortParam}>Year</td>
-                <td onClick={this.setSortParam}>Violation</td>
-                <td onClick={this.setSortParam}>Ticket #</td>
-                <td onClick={this.setSortParam}>Employee #</td>
-                <td onClick={this.setSortParam}>Date</td>
-                <td onClick={this.setSortParam}>Unit</td>
+                {headerNodes}
               </tr>
             </thead>
             <tbody>
