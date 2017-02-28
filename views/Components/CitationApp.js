@@ -1,11 +1,10 @@
 import React from 'react';
 import $ from 'jquery';
-import Bootstrap$ from 'bootstrap-jquery';
 import Citations from './Citations';
 import RegistrationForm from './RegistrationForm';
 import LoginForm from './LoginForm';
 import Header from './Header';
-import TicketFooter from './TicketFooter';
+import ViolationDropdown from './ViolationDropdown';
 import Form from './Form';
 import {expired, queryCheck } from '../../src/helpers';
 
@@ -194,7 +193,7 @@ var CitationApp = React.createClass({
             {form}
           </div>
           <div className='pull-left'>
-            <TicketFooter />
+            <ViolationDropdown />
           </div>
           <div>
             <div className="pull-left">

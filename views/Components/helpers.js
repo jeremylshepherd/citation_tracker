@@ -15,6 +15,7 @@ module.exports = {
         r.employee.toLowerCase().indexOf(query) !== -1 ||
         r.officer.name.toLowerCase().indexOf(query)  !== -1 ||
         r.color.toLowerCase().indexOf(query)    !== -1 ||
+        r.ticket.toLowerCase().indexOf(query)    !== -1 ||
         r.state.toLowerCase().indexOf(query)    !== -1
       ){
         return true;
@@ -23,8 +24,21 @@ module.exports = {
       }
     },
     
+    cleanInput: function(str) {
+      var re = /^[A-z0-9 _\/ \, \:]*[A-z0-9 _\/ \, \:][A-z0-9 _\/ \, \:]*$/;
+      var arr = str.split('');
+      var newArr = [];
+      for(var i = 0; i < arr.length; i++){
+          if(re.test(arr[i])){
+              newArr.push(arr[i]);
+          }
+      }
+      var newStr = newArr.join('');
+      return newStr.toUpperCase();
+    },
+    
     compare: function(a, b) {
-      if(typeof +a === 'number' && a.length < 3) {
+      if(!Number.isNaN(+a) && a.length !== 0) {
         return a - b;
       }
       
@@ -33,11 +47,32 @@ module.exports = {
         b = Date.parse(b);
       }
       
-      if(Number.isNaN(a) && Number.isNaN(b)) {
+      if(Number.isNaN(+a) && Number.isNaN(+b)  && !Array.isArray(a)) {
         a = a.toLowerCase();
         b = b.toLowerCase();
-      } 
+      }
+      
+      if(Number.isNaN(+a) && Number.isNaN(+b)  && Array.isArray(a)) {
+        a = a.join(', ').toLowerCase();
+        b = b.join(', ').toLowerCase();
+      }
       
       return (a<b) ? -1 : (a>b) ? 1 : 0;
+    },
+    
+    validator: function(r) {
+       if(
+        !r.ticket ||
+        !r.make ||
+        !r.color || 
+        !r.tag || 
+        !r.violation.length || 
+        !r.location || 
+        !r.officer || 
+        r.date.length < 10 || 
+        r.time.length <5) {
+          return false;
+      }
+      return true;
     }
 };

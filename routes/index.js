@@ -246,7 +246,6 @@ router.post('/api/new/citation', isLoggedIn, (req, res) => {
         newCite.save((err) => {
           if(err) {console.log(err);}
           console.log('Citation saved!');
-          req.flash('recordSuccess', 'New Citation entered');
           res.json({message: 'Citation saved'});
       });
     });
@@ -276,7 +275,6 @@ router.post('/api/update/:ticket', isLoggedIn, (req, res) => {
                 citation.save((err) => {
                   if(err) {console.log(err);}
                   console.log('Citation updated!');
-                  req.flash('recordSuccess', 'Citation Updated');
                   res.json({message:'Citation updated'});
                 });
             }else{

@@ -36,6 +36,7 @@ export default class CitationUpdateForm extends Component {
         }
       });
     }
+    
     this.setState({
       [name]: value
     });
@@ -155,7 +156,7 @@ export default class CitationUpdateForm extends Component {
                   name="ticket" 
                   placeholder="Ticket"  
                   value={this.state.ticket}
-                  onChange={this.handleInputChange}
+                  disabled
                 />
                 <input 
                   className="form-control" 

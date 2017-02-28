@@ -5,7 +5,7 @@ import Citations from './Citations';
 import RegistrationForm from './RegistrationForm';
 import LoginForm from './LoginForm';
 import Header from './Header';
-import TicketFooter from './TicketFooter';
+import ViolationDropdown from './ViolationDropdown';
 import Form from './Form';
 import { expired, queryCheck } from '../../src/helpers';
 import { browserHistory } from 'react-router';
@@ -83,12 +83,11 @@ var Ticket = React.createClass({
             <h4 className="list-group-item">{'Model: ' + c.model}</h4>
             <h4 className="list-group-item">{'Color: ' + c.color}</h4>
             <h4 className="list-group-item">{'Employee Number: ' + c.employee}</h4>
-            <h4 className="list-group-item">{'Violations: ' + c.violation.join(', ')}</h4>
+            <h4 className="list-group-item">{'Violations: ' + c.violation.join(', ')}<ViolationDropdown /></h4>
             <h4 className={"list-group-item" + dateClass}>{'Citation Issued: ' + c.date + ' ' + c.time}</h4>
             <h4 className="list-group-item">{'Officer: ' + officer}</h4>
           </div>
         </div>
-        <div className='col-xs-12'><TicketFooter /></div>
       </div>
     );
   }

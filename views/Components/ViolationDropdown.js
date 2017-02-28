@@ -1,6 +1,6 @@
 import React from 'react';
 
-var TicketFooter = React.createClass({
+var ViolationDropdown = React.createClass({
   render: function() {
     return (
       <div className="VioDrop">
@@ -30,4 +30,4 @@ var TicketFooter = React.createClass({
   }
 });
 
-module.exports = TicketFooter;
+module.exports = ViolationDropdown;

@@ -37638,10 +37638,6 @@ var _jquery = require('jquery');
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _bootstrapJquery = require('bootstrap-jquery');
-
-var _bootstrapJquery2 = _interopRequireDefault(_bootstrapJquery);
-
 var _Citations = require('./Citations');
 
 var _Citations2 = _interopRequireDefault(_Citations);
@@ -37658,9 +37654,9 @@ var _Header = require('./Header');
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _TicketFooter = require('./TicketFooter');
+var _ViolationDropdown = require('./ViolationDropdown');
 
-var _TicketFooter2 = _interopRequireDefault(_TicketFooter);
+var _ViolationDropdown2 = _interopRequireDefault(_ViolationDropdown);
 
 var _Form = require('./Form');
 
@@ -37881,7 +37877,7 @@ var CitationApp = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'pull-left' },
-          _react2.default.createElement(_TicketFooter2.default, null)
+          _react2.default.createElement(_ViolationDropdown2.default, null)
         ),
         _react2.default.createElement(
           'div',
@@ -37934,7 +37930,7 @@ var CitationApp = _react2.default.createClass({
 
 module.exports = CitationApp;
 
-},{"../../src/helpers":243,"./Citations":246,"./Form":248,"./Header":249,"./LoginForm":250,"./RegistrationForm":252,"./TicketFooter":254,"bootstrap-jquery":1,"jquery":15,"react":241}],245:[function(require,module,exports){
+},{"../../src/helpers":243,"./Citations":246,"./Form":248,"./Header":249,"./LoginForm":250,"./RegistrationForm":252,"./ViolationDropdown":254,"jquery":15,"react":241}],245:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -38005,6 +38001,7 @@ var CitationUpdateForm = function (_Component) {
           }
         });
       }
+
       this.setState(_defineProperty({}, name, value));
     }
   }, {
@@ -38137,7 +38134,7 @@ var CitationUpdateForm = function (_Component) {
                   name: 'ticket',
                   placeholder: 'Ticket',
                   value: this.state.ticket,
-                  onChange: this.handleInputChange
+                  disabled: true
                 }),
                 _react2.default.createElement('input', {
                   className: 'form-control',
@@ -39123,9 +39120,9 @@ var _Header = require('./Header');
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _TicketFooter = require('./TicketFooter');
+var _ViolationDropdown = require('./ViolationDropdown');
 
-var _TicketFooter2 = _interopRequireDefault(_TicketFooter);
+var _ViolationDropdown2 = _interopRequireDefault(_ViolationDropdown);
 
 var _Form = require('./Form');
 
@@ -39248,7 +39245,8 @@ var Ticket = _react2.default.createClass({
           _react2.default.createElement(
             'h4',
             { className: 'list-group-item' },
-            'Violations: ' + c.violation.join(', ')
+            'Violations: ' + c.violation.join(', '),
+            _react2.default.createElement(_ViolationDropdown2.default, null)
           ),
           _react2.default.createElement(
             'h4',
@@ -39261,11 +39259,6 @@ var Ticket = _react2.default.createClass({
             'Officer: ' + officer
           )
         )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'col-xs-12' },
-        _react2.default.createElement(_TicketFooter2.default, null)
       )
     );
   }
@@ -39273,7 +39266,7 @@ var Ticket = _react2.default.createClass({
 
 module.exports = Ticket;
 
-},{"../../src/helpers":243,"./Citations":246,"./Form":248,"./Header":249,"./LoginForm":250,"./RegistrationForm":252,"./TicketFooter":254,"bootstrap-jquery":1,"jquery":15,"react":241,"react-router":43}],254:[function(require,module,exports){
+},{"../../src/helpers":243,"./Citations":246,"./Form":248,"./Header":249,"./LoginForm":250,"./RegistrationForm":252,"./ViolationDropdown":254,"bootstrap-jquery":1,"jquery":15,"react":241,"react-router":43}],254:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -39282,8 +39275,8 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var TicketFooter = _react2.default.createClass({
-  displayName: "TicketFooter",
+var ViolationDropdown = _react2.default.createClass({
+  displayName: "ViolationDropdown",
 
   render: function render() {
     return _react2.default.createElement(
@@ -39381,6 +39374,6 @@ var TicketFooter = _react2.default.createClass({
   }
 });
 
-module.exports = TicketFooter;
+module.exports = ViolationDropdown;
 
 },{"react":241}]},{},[242]);
