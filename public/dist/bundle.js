@@ -37819,6 +37819,7 @@ var CitationApp = _react2.default.createClass({
     var _this2 = this;
 
     var data = JSON.parse(JSON.stringify(this.state.data));
+
     var filtered = [];
     data.map(function (r) {
       var query = _this2.state.query.toLowerCase();
@@ -38336,6 +38337,7 @@ var Citations = _react2.default.createClass({
         name
       );
     });
+
     return _react2.default.createElement(
       'div',
       { className: 'table-responsive' },

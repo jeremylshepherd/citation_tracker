@@ -81,6 +81,7 @@ var Citations = React.createClass({
           <th key={i} className={style} onClick={this.setSortParam}>{name}</th>
         );
     });
+    
     return (
       <div className="table-responsive">
           <table className="table table-striped table-hover table-condensed">

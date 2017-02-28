@@ -152,6 +152,7 @@ var CitationApp = React.createClass({
   
   render: function() {
     let data = JSON.parse(JSON.stringify(this.state.data));
+    
     let filtered = [];
     data.map((r) => {
       let query = this.state.query.toLowerCase();
