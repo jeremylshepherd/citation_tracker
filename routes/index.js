@@ -247,11 +247,7 @@ router.post('/api/new/citation', isLoggedIn, (req, res) => {
           if(err) {console.log(err);}
           console.log('Citation saved!');
           req.flash('recordSuccess', 'New Citation entered');
-<<<<<<< HEAD
-          res.json('Citation saved');
-=======
           res.json({message: 'Citation saved'});
->>>>>>> f1435f81844ccbf6887c2ed8c8e6f85d99a9626b
       });
     });
 });
@@ -260,11 +256,7 @@ router.post('/api/update/:ticket', isLoggedIn, (req, res) => {
     User.findOne({'_id': req.user._id}, (err, user) => {
         if(err)  {console.log(err);}
         Citation.findOne({'ticket': req.params.ticket}, (err, citation) => {
-<<<<<<< HEAD
-            if(err)  {console.log(err);}
-=======
             if(err)  {res.json({message:err});}
->>>>>>> f1435f81844ccbf6887c2ed8c8e6f85d99a9626b
             
             if(user._id.toString() === citation.creator.toString()){
                 citation.ticket = req.body.ticket;
@@ -285,11 +277,7 @@ router.post('/api/update/:ticket', isLoggedIn, (req, res) => {
                   if(err) {console.log(err);}
                   console.log('Citation updated!');
                   req.flash('recordSuccess', 'Citation Updated');
-<<<<<<< HEAD
-                  res.json({message:'Citation saved'});
-=======
                   res.json({message:'Citation updated'});
->>>>>>> f1435f81844ccbf6887c2ed8c8e6f85d99a9626b
                 });
             }else{
                 console.error("You cannot edit another's citations!");
