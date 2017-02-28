@@ -7,7 +7,6 @@ import LoginForm from './LoginForm';
 import Header from './Header';
 import TicketFooter from './TicketFooter';
 import Form from './Form';
-import Flash from './Flash';
 import {expired, queryCheck } from '../../src/helpers';
 
 var CitationApp = React.createClass({

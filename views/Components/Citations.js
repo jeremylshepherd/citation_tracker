@@ -5,7 +5,7 @@ import {expired, queryCheck, compare } from '../../src/helpers.js';
 var Citations = React.createClass({
   getInitialState: function(){
     return ({
-      desc: false,
+      desc: true,
       sortParam: 'date'
     });
   },
@@ -26,10 +26,15 @@ var Citations = React.createClass({
       name = 'ticket';
     }
     
-    this.setState({
-      sortParam: name,
-      desc: !this.state.desc
-    });
+    if(name == this.state.sortParam) {
+      this.setState({
+        desc: !this.state.desc
+      });
+    }else{
+      this.setState({
+        sortParam: name
+      });
+    }
   },
   
   render: function() {

@@ -37576,7 +37576,7 @@ module.exports = {
   },
 
   queryCheck: function queryCheck(r, query) {
-    if (r.tag.toLowerCase().indexOf(query) !== -1 || r.make.toLowerCase().indexOf(query) !== -1 || r.model.toLowerCase().indexOf(query) !== -1 || r.location.toLowerCase().indexOf(query) !== -1 || r.employee.toLowerCase().indexOf(query) !== -1 || r.officer.name.toLowerCase().indexOf(query) !== -1 || r.color.toLowerCase().indexOf(query) !== -1 || r.state.toLowerCase().indexOf(query) !== -1) {
+    if (r.tag.toLowerCase().indexOf(query) !== -1 || r.make.toLowerCase().indexOf(query) !== -1 || r.model.toLowerCase().indexOf(query) !== -1 || r.location.toLowerCase().indexOf(query) !== -1 || r.employee.toLowerCase().indexOf(query) !== -1 || r.officer.name.toLowerCase().indexOf(query) !== -1 || r.color.toLowerCase().indexOf(query) !== -1 || r.ticket.toLowerCase().indexOf(query) !== -1 || r.state.toLowerCase().indexOf(query) !== -1) {
       return true;
     } else {
       return false;
@@ -37665,10 +37665,6 @@ var _TicketFooter2 = _interopRequireDefault(_TicketFooter);
 var _Form = require('./Form');
 
 var _Form2 = _interopRequireDefault(_Form);
-
-var _Flash = require('./Flash');
-
-var _Flash2 = _interopRequireDefault(_Flash);
 
 var _helpers = require('../../src/helpers');
 
@@ -37937,7 +37933,7 @@ var CitationApp = _react2.default.createClass({
 
 module.exports = CitationApp;
 
-},{"../../src/helpers":243,"./Citations":246,"./Flash":247,"./Form":248,"./Header":249,"./LoginForm":250,"./RegistrationForm":252,"./TicketFooter":254,"bootstrap-jquery":1,"jquery":15,"react":241}],245:[function(require,module,exports){
+},{"../../src/helpers":243,"./Citations":246,"./Form":248,"./Header":249,"./LoginForm":250,"./RegistrationForm":252,"./TicketFooter":254,"bootstrap-jquery":1,"jquery":15,"react":241}],245:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -38213,7 +38209,7 @@ var Citations = _react2.default.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      desc: false,
+      desc: true,
       sortParam: 'date'
     };
   },
@@ -38234,10 +38230,15 @@ var Citations = _react2.default.createClass({
       name = 'ticket';
     }
 
-    this.setState({
-      sortParam: name,
-      desc: !this.state.desc
-    });
+    if (name == this.state.sortParam) {
+      this.setState({
+        desc: !this.state.desc
+      });
+    } else {
+      this.setState({
+        sortParam: name
+      });
+    }
   },
 
   render: function render() {
@@ -38418,10 +38419,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _TicketFooter = require('./TicketFooter');
-
-var _TicketFooter2 = _interopRequireDefault(_TicketFooter);
-
 var _helpers = require('../../src/helpers');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -38561,7 +38558,7 @@ var Form = _react2.default.createClass({
 
 module.exports = Form;
 
-},{"../../src/helpers":243,"./TicketFooter":254,"react":241}],249:[function(require,module,exports){
+},{"../../src/helpers":243,"react":241}],249:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -38584,14 +38581,9 @@ var Header = _react2.default.createClass({
       'div',
       { className: 'navbar-form navbar-right' },
       _react2.default.createElement(
-        'span',
-        { className: 'text-primary' },
-        'Logged in as ',
-        _react2.default.createElement(
-          _reactRouter.Link,
-          { to: '/officer/' + this.props.user.local.username },
-          this.props.user.local.username
-        )
+        _reactRouter.Link,
+        { to: '/officer/' + this.props.user.local.username, className: 'btn btn-link' },
+        'Logged in as ' + this.props.user.local.username
       ),
       ' ',
       _react2.default.createElement(
@@ -38643,7 +38635,11 @@ var Header = _react2.default.createClass({
           icon
         )
       ),
-      flash,
+      _react2.default.createElement(
+        'div',
+        { className: 'flashPoint' },
+        flash
+      ),
       _react2.default.createElement(
         'header',
         null,
@@ -38671,10 +38667,6 @@ module.exports = Header;
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
-
-var _Header = require('./Header');
-
-var _Header2 = _interopRequireDefault(_Header);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38773,7 +38765,7 @@ var LoginForm = _react2.default.createClass({
 
 module.exports = LoginForm;
 
-},{"./Header":249,"react":241}],251:[function(require,module,exports){
+},{"react":241}],251:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -38915,7 +38907,7 @@ var Profile = function (_React$Component) {
             var _this3 = this;
 
             if (this.state.message) {
-                setTimeout(function () {
+                this.timer = setTimeout(function () {
                     _this3.setState({ message: '', sucess: false });
                 }, 5000);
             }
@@ -39280,109 +39272,107 @@ var Ticket = _react2.default.createClass({
 module.exports = Ticket;
 
 },{"../../src/helpers":243,"./Citations":246,"./Form":248,"./Header":249,"./LoginForm":250,"./RegistrationForm":252,"./TicketFooter":254,"bootstrap-jquery":1,"jquery":15,"react":241,"react-router":43}],254:[function(require,module,exports){
-'use strict';
+"use strict";
 
-var _react = require('react');
+var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
-
-var _reactRouter = require('react-router');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var TicketFooter = _react2.default.createClass({
-  displayName: 'TicketFooter',
+  displayName: "TicketFooter",
 
   render: function render() {
     return _react2.default.createElement(
-      'div',
-      { className: 'VioDrop' },
+      "div",
+      { className: "VioDrop" },
       _react2.default.createElement(
-        'div',
-        { className: 'dropdown-toggle', id: 'VioDrop', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' },
+        "div",
+        { className: "dropdown-toggle", id: "VioDrop", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false" },
         _react2.default.createElement(
-          'h3',
+          "h3",
           null,
           _react2.default.createElement(
-            'span',
-            { className: 'btn btn-default' },
-            'Violation Codes',
-            _react2.default.createElement('span', { className: 'caret' })
+            "span",
+            { className: "btn btn-default" },
+            "Violation Codes",
+            _react2.default.createElement("span", { className: "caret" })
           )
         )
       ),
       _react2.default.createElement(
-        'ul',
-        { className: 'dropdown-menu', 'aria-labelledby': 'VioDrop' },
+        "ul",
+        { className: "dropdown-menu", "aria-labelledby": "VioDrop" },
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '1.  NO PARKING ZONE'
+          "1.  NO PARKING ZONE"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '2.  RESERVED SPACE'
+          "2.  RESERVED SPACE"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '3.  BLOCKING DRIVEWAY'
+          "3.  BLOCKING DRIVEWAY"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '4.  EMERGENCY DRIVEWAY'
+          "4.  EMERGENCY DRIVEWAY"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '5.  WITHIN 10 (TEN) FEET OF A FIRE HYDRANT'
+          "5.  WITHIN 10 (TEN) FEET OF A FIRE HYDRANT"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '6.  PARKING WITHOUT A PERMIT'
+          "6.  PARKING WITHOUT A PERMIT"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '7.  PARKING IN AN UNASSIGNED SPACE'
+          "7.  PARKING IN AN UNASSIGNED SPACE"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '8.  PARKING IN A LOADING DOCK AREA'
+          "8.  PARKING IN A LOADING DOCK AREA"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '9.  DOUBLE PARKING'
+          "9.  DOUBLE PARKING"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '10. WITHIN AN INTERSECTION'
+          "10. WITHIN AN INTERSECTION"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '11. EXCEEDING TIME LIMIT'
+          "11. EXCEEDING TIME LIMIT"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '12. IN A FIRE LANE'
+          "12. IN A FIRE LANE"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '13. NO "H" STICKER'
+          "13. NO \"H\" STICKER"
         ),
         _react2.default.createElement(
-          'li',
+          "li",
           null,
-          '14. OTHER'
+          "14. OTHER"
         )
       )
     );
@@ -39391,4 +39381,4 @@ var TicketFooter = _react2.default.createClass({
 
 module.exports = TicketFooter;
 
-},{"react":241,"react-router":43}]},{},[242]);
+},{"react":241}]},{},[242]);

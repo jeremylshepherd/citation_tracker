@@ -15,6 +15,7 @@ module.exports = {
         r.employee.toLowerCase().indexOf(query) !== -1 ||
         r.officer.name.toLowerCase().indexOf(query)  !== -1 ||
         r.color.toLowerCase().indexOf(query)    !== -1 ||
+        r.ticket.toLowerCase().indexOf(query)    !== -1 ||
         r.state.toLowerCase().indexOf(query)    !== -1
       ){
         return true;

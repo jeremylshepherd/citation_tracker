@@ -1,5 +1,4 @@
 import React from 'react';
-import TicketFooter from './TicketFooter';
 import {cleanInput, validator} from '../../src/helpers';
 
 var Form = React.createClass({

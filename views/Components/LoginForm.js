@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from './Header';
 
 var LoginForm = React.createClass({
     getInitialState: function() {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link, browserHistory} from 'react-router';
+import {browserHistory} from 'react-router';
 import Header from './Header';
 import Citations from './Citations';
 import CitationUpdateForm from './CitationUpdateForm';
@@ -92,7 +92,7 @@ export default class Profile extends React.Component {
     
     componentDidUpdate() {
         if(this.state.message) {
-            setTimeout(() => {
+            this.timer = setTimeout(() => {
                 this.setState({message: '', sucess: false});
             }, 5000);
         }
