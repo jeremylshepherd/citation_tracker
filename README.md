@@ -1,4 +1,4 @@
 #Citation Tracker
 A Full stack solution to tracking citations.
 
-![ScreenShot](https://github.com/jeremylshepherd/citation_tracker/blob/master/CitationTrackerSS.png)
+![ScreenShot](https://raw.githubusercontent.com/jeremylshepherd/citation_tracker/master/Citation%20Tracker%2020170302.png)
