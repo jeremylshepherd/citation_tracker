@@ -38255,7 +38255,7 @@ var Citations = _react2.default.createClass({
     var citationNodes = data.map(function (x, i) {
       var clName = (0, _helpers.expired)(x.date) ? 'danger' : '';
       var link = '/' + x.ticket;
-      var unit = _this.props.auth ? _react2.default.createElement('span', { className: 'glyphicon glyphicon-pencil', 'data-toggle': 'modal', 'data-target': '#citation' + i }) : x.officer.unit;
+      var unit = _this.props.auth ? _react2.default.createElement('span', { className: 'glyphicon glyphicon-pencil', 'data-toggle': 'modal', 'data-target': '#citation' + x._id }) : x.officer.unit;
       return _react2.default.createElement(
         'tr',
         { key: i, className: clName },
@@ -38919,7 +38919,7 @@ var Profile = function (_React$Component) {
             var date = new Date(this.state.created);
             date = date.toLocaleDateString('en-us');
             var CiteForms = this.state.citations.map(function (c, i) {
-                return _react2.default.createElement(_CitationUpdateForm2.default, _extends({ key: i }, c, { update: _this4.editCite, id: 'citation' + i, username: _this4.state.username }));
+                return _react2.default.createElement(_CitationUpdateForm2.default, _extends({ key: i }, c, { update: _this4.editCite, id: 'citation' + c._id, username: _this4.state.username }));
             });
             return _react2.default.createElement(
                 'div',

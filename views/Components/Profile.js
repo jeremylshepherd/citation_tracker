@@ -103,7 +103,7 @@ export default class Profile extends React.Component {
         date = date.toLocaleDateString('en-us');
         let CiteForms = this.state.citations.map((c, i) => {
             return (
-                <CitationUpdateForm  key={i} {...c} update={this.editCite} id={`citation${i}`} username={this.state.username}/>
+                <CitationUpdateForm  key={i} {...c} update={this.editCite} id={`citation${c._id}`} username={this.state.username}/>
             );
         });
         return (
