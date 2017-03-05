@@ -52,7 +52,11 @@ var Citations = React.createClass({
       let clName = expired(x.date) ? 'danger' : '';
       let link = `/${x.ticket}`;
       let unit = this.props.auth ?
-      (<span className="glyphicon glyphicon-pencil" data-toggle="modal" data-target={`#citation${x._id}`}></span>) : x.officer.unit;
+      (
+        <span className="btn btn-primary btn-xs" data-toggle="modal" data-target={`#citation${x._id}`}>
+          <span className="glyphicon glyphicon-pencil" />
+        </span>
+      ) : x.officer.unit;
       return (
         <tr key={i} className={clName}>
           <td>{x.tag}</td>

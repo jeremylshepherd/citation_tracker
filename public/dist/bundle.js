@@ -38255,7 +38255,11 @@ var Citations = _react2.default.createClass({
     var citationNodes = data.map(function (x, i) {
       var clName = (0, _helpers.expired)(x.date) ? 'danger' : '';
       var link = '/' + x.ticket;
-      var unit = _this.props.auth ? _react2.default.createElement('span', { className: 'glyphicon glyphicon-pencil', 'data-toggle': 'modal', 'data-target': '#citation' + x._id }) : x.officer.unit;
+      var unit = _this.props.auth ? _react2.default.createElement(
+        'span',
+        { className: 'btn btn-primary btn-xs', 'data-toggle': 'modal', 'data-target': '#citation' + x._id },
+        _react2.default.createElement('span', { className: 'glyphicon glyphicon-pencil' })
+      ) : x.officer.unit;
       return _react2.default.createElement(
         'tr',
         { key: i, className: clName },
