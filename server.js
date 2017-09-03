@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var logger = require('morgan');
 var passport = require("passport");
 var session = require("express-session");
 var flash = require("express-flash");
@@ -19,16 +20,19 @@ require("./config/passport")(passport);
 
 var routes = require('./routes/index');
 
-mongoose.connect(process.env.MONGO_URI, function(err, db) {
+mongoose.connect(process.env.MONGODB_URI, function(err, db) {
   if(err) {console.log(err);}
 
-  console.log(`Connected to ${process.env.MONGO_URI}`);
+  console.log(`Connected to ${process.env.MONGODB_URI}`);
 });
 
 app.set('view engine', 'ejs');
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+if(process.env.NODE_ENV === 'development') {
+  app.use(logger('dev'));
+}
 
 app.use(session({
 	secret: process.env.SESSION_SECRET,

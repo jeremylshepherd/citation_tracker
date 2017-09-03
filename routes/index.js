@@ -13,6 +13,7 @@ var ReactDOMServer = require("react-dom/server");
 var passport = require("passport");
 var crypto = require("crypto");
 var nodemailer = require('nodemailer');
+var jwt = require('jsonwebtoken');
 var cors = require("cors");
 
 require("../config/passport");
@@ -22,13 +23,14 @@ require("../config/passport");
 ******************************************************************************/
 
 //Authentication middleware
+const tokenAuth = passport.authenticate('jwt', {session: false, failureRedirect: '/login'});
+
 function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
+    if(req.isAuthenticated()) {
         console.log("You are logged in!");
         return next(); 
     }
-    req.flash("login", "You must first log in or register first!");
-    res.redirect('/login');
+    tokenAuth(req, res, next);
 }
 
 /*****************
@@ -73,16 +75,31 @@ router.post('/signup', (req, res) => {
 });
     
 router.post('/signon', passport.authenticate('local', {
-        successRedirect : '/',
-        failureRedirect : '/login',
-        failureFlash : true
-    }));
+    successRedirect : '/',
+    failureRedirect : '/login',
+    failureFlash : true
+}));
+    
+router.post('/native/signon', function (req, res, next) {
+  passport.authenticate('local', function (err, user, info) {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials.' });
+    }
+    if (user) {
+      var token = jwt.sign({ _id: user._id, email: user.local.email }, process.env.TOKEN_SECRET, { expiresIn: '20m' });
+      return res.json({ token });
+    }
+  })(req, res, next);
+});
     
 router.post('/forgot', (req, res) => {
    User.findOne({'local.email' : req.body.email}, (err, user) => {
         if(err){res.json(err);}
         if(!user) {
-            req.flash('login', 'User does not exist')
+            req.flash('login', 'User does not exist');
             return res.redirect('/login');
             
         }

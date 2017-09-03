@@ -1,4 +1,6 @@
 var LocalStrategy = require('passport-local').Strategy;
+var JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
 var User = require('../models/Users');
 var configAuth = require('./auth');
 
@@ -44,6 +46,25 @@ module.exports = function (passport) {
             return done(null, user, req.flash("loggedin", "Who's awesome? You're awesome! Thanks for logging in."));
         });
 
+    }));
+    
+/*********************
+*PASSPORT-JWT*********
+*********************/
+    
+    var options = {};
+    options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+    options.secretOrKey = process.env.TOKEN_SECRET;
+    passport.use(new JwtStrategy(options, function(jwt_payload, done) {
+        User.findOne({_id: jwt_payload._id}, function(err, user) {
+            if (err) {return done(err, false);}
+            
+            if (user) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+            }
+        });
     }));
 };
 
