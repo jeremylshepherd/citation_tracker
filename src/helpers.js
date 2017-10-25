@@ -38,6 +38,10 @@ module.exports = {
     },
     
     compare: function(a, b) {
+      Number.isNaN = Number.isNaN || function(value) {     
+          return value !== value;
+      };
+      
       if(!Number.isNaN(+a) && a.length !== 0) {
         return a - b;
       }
