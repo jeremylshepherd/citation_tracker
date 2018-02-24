@@ -319,7 +319,7 @@ router.get('/api/citation/:ticket', isLoggedIn, (req, res) => {
     });
 });
 
-router.get('*', (req, res) => {
+router.get('*', isLoggedIn, (req, res) => {
     res.render('index.ejs');
 });
 
