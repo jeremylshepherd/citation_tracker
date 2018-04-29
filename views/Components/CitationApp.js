@@ -6,6 +6,10 @@ import LoginForm from './LoginForm';
 import Header from './Header';
 import ViolationDropdown from './ViolationDropdown';
 import Form from './Form';
+import Toggle from 'material-ui/Toggle';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {expired, queryCheck } from '../../src/helpers';
 
 var CitationApp = React.createClass({
@@ -192,16 +196,23 @@ var CitationApp = React.createClass({
           <div>
             {form}
           </div>
-          <div className='pull-left'>
-            <ViolationDropdown />
-          </div>
-          <div>
-            <div className="pull-left">
-              <h2><span className="label label-primary pull-left">{count}</span></h2>
+          <div className="flex-banner">
+            <div>
+              <ViolationDropdown />
             </div>
-            <div className="pull-right act-group">
-              <span className={this.state.active ? "btn btn-success act" : "btn btn-default act"} onClick={this.toggleActive}>Active</span>
-              <span className={this.state.active ? "btn btn-default act" : "btn btn-success act"} onClick={this.toggleActive}>All</span>
+            <div>
+              <h2 id="count"><span className="label label-primary">{count}</span></h2>
+            </div>
+            <div style={{ alignSelf: 'flex-end' }}>
+              <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+                <Toggle 
+                  label={this.state.active ? 'Active' : 'All'} 
+                  toggled={this.state.active} onToggle={() => 
+                  this.setState({ active: !this.state.active })}
+                  thumbSwitchedStyle={{ backgroundColor: '#008CBA' }}
+                  labelStyle={{color: '#222'}}
+                  labelPosition="left"/>
+              </MuiThemeProvider>
             </div>
           </div>
           <div className="input-group">

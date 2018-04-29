@@ -5,8 +5,8 @@ import {Link} from 'react-router';
 var Header = React.createClass({
   render: function() {
     let icon = Object.keys(this.props.user).length > 0 ?
-        (<div className="navbar-form navbar-right"><Link to={`/officer/${this.props.user.local.username}`} className="btn btn-link">{`Logged in as ${this.props.user.local.username}`}</Link> <a href="/logout" className="btn btn-danger">Log Out</a></div>) : 
-        (<div className="navbar-form navbar-right">Please <Link to='/login' className="btn btn-primary" data-toggle="modal" data-target="#registerForm">Register</Link><span> or </span>
+        (<div className="collapse navbar-collapse nav navbar-nav navbar-right" id="right-nav"><Link to={`/officer/${this.props.user.local.username}`} className="btn btn-link">{`Logged in as ${this.props.user.local.username}`}</Link> <a href="/logout" className="btn btn-danger">Log Out</a></div>) : 
+        (<div className="collapse navbar-collapse nav navbar-nav navbar-right" id="right-nav">Please <Link to='/login' className="btn btn-primary" data-toggle="modal" data-target="#registerForm">Register</Link><span> or </span>
         <a href='/login' className="btn btn-success" data-toggle="modal" data-target="#loginForm">Log In</a></div>);
         
     let brand = this.props.user ? 
@@ -17,16 +17,31 @@ var Header = React.createClass({
       <div>
         <nav className="navbar navbar-default navbar-fixed-top">
           <div className="container-fluid">
-            {brand}
+            <div className="row">
+              <div className="navbar-header">
+                <button
+                  type="button"
+                  className="navbar-toggle collapsed"
+                  data-toggle="collapse"
+                  data-target="#right-nav"
+                  aria-expanded="false"
+                >
+                  <span className="sr-only">Toggle navigation</span>
+                  <span className="icon-bar" />
+                  <span className="icon-bar" />
+                  <span className="icon-bar" />
+                </button>
+                {brand}
+              </div>
             {icon}
+            </div>
           </div>
         </nav>
         <div className="flashPoint">
           {flash}
         </div>
         <header>
-          <h1><img className="patch" src="/dist/expandedPatch.svg"/> Good Samaritan Campus Police</h1>
-          <h3>Citation Application</h3>
+          <h1 className="text-center" id="dept"><img className="patch" src="/dist/expandedPatch.svg"/> Good Samaritan Campus Police</h1>
         </header>
       </div>
     );

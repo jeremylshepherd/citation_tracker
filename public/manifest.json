@@ -1,0 +1,16 @@
+{
+  "name": "Good Samaritan Police Citation Tracking App",
+  "short_name": "XCITE",
+  "lang": "en-US",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#333",
+  "icons": [
+    {
+      "src": "/dist/expandedPatch.svg",
+      "sizes": "24x24 48x48 96x96 128x128 192x192 256x256 512x512",
+      "type": "image/svg"
+    }
+  ],
+  "background_color": "#fff"
+}

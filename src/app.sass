@@ -14,12 +14,27 @@
 
 .shadow
     box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.8)
+    
 
 body
   padding-top: 60px
   
 .flashPoint
   min-height: 50px
+
+.flex-banner
+  display: flex
+  flex-direction: row
+  flex-flow: row wrap
+  justify-content: space-between
+  align-items: center
+  .VioDrop
+    z-index: 1000
+    position: relative
+  .act-group
+    margin-top: 20px
+    .act
+      width: 85px
 
 table
   table-layout: auto
@@ -29,15 +44,6 @@ table
 .input-group
   width: 100%
   
-.VioDrop
-  z-index: 1000
-  position: relative
-  min-width: 200px
-  
-.act-group
-  margin-top: 20px
-  .act
-    width: 85px
   
 @media screen and (max-width: 967px)
   .container-fluid
@@ -46,4 +52,19 @@ table
 @media screen and (min-width: 968px)
   .container-fluid
     width: 80%
+
+@media screen and (max-width: 768px)
+  #please,
+  #dept
+    font-size: 1.4rem
+    .patch
+      width: 60px
+  #count
+    display: none
     
+@media screen and (max-width: 420px)
+  .btn-danger,
+  .btn-primary,
+  .btn-link
+    display: block
+    width: 100%

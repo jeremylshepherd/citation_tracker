@@ -6251,6 +6251,20 @@ body {
 .flashPoint {
   min-height: 50px; }
 
+.flex-banner {
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center; }
+  .flex-banner .VioDrop {
+    z-index: 1000;
+    position: relative; }
+  .flex-banner .act-group {
+    margin-top: 20px; }
+    .flex-banner .act-group .act {
+      width: 85px; }
+
 table {
   table-layout: auto;
   max-width: 100%;
@@ -6259,16 +6273,6 @@ table {
 .input-group {
   width: 100%; }
 
-.VioDrop {
-  z-index: 1000;
-  position: relative;
-  min-width: 200px; }
-
-.act-group {
-  margin-top: 20px; }
-  .act-group .act {
-    width: 85px; }
-
 @media screen and (max-width: 967px) {
   .container-fluid {
     width: 95%; } }
@@ -6276,3 +6280,20 @@ table {
 @media screen and (min-width: 968px) {
   .container-fluid {
     width: 80%; } }
+
+@media screen and (max-width: 768px) {
+  #please,
+  #dept {
+    font-size: 1.4rem; }
+    #please .patch,
+    #dept .patch {
+      width: 60px; }
+  #count {
+    display: none; } }
+
+@media screen and (max-width: 420px) {
+  .btn-danger,
+  .btn-primary,
+  .btn-link {
+    display: block;
+    width: 100%; } }
