@@ -47,7 +47,7 @@ var RegistrationForm = React.createClass({
                                     <input 
                                         type="text" 
                                         className="form-control" 
-                                        id="inputUserName" 
+                                        id="inputRegisterUserName" 
                                         placeholder="username" 
                                         name="username" 
                                         onChange={this.handleUserName}
@@ -60,7 +60,7 @@ var RegistrationForm = React.createClass({
                                     <input 
                                         type="email" 
                                         className="form-control" 
-                                        id="inputEmail" 
+                                        id="inputRegisterEmail" 
                                         placeholder="Email" 
                                         name="email" 
                                         onChange={this.handleEmail}
@@ -73,7 +73,7 @@ var RegistrationForm = React.createClass({
                                     <input 
                                         type="password" 
                                         className="form-control" 
-                                        id="inputPassword" 
+                                        id="inputRegisterPassword" 
                                         placeholder="Password" 
                                         name="password" 
                                         onChange={this.handlePassword}

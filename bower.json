@@ -1,0 +1,22 @@
+{
+  "name": "citationappredux",
+  "description": "An attempt to create a simple template for React applications with Authentiction.",
+  "main": "server.js",
+  "authors": [
+    "Jeremy L. Shepherd <jeremylshepherd@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/jeremylshepherd/citation_tracker",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "3.3.7",
+    "font-awesome": "4.7.0",
+    "jquery": "3.3.1"
+  }
+}

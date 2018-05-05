@@ -6,6 +6,14 @@
       
       <div class="container-fluid" id="app"></div>
       <script type="text/javascript" src="/dist/bundle.js"></script>
+      <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () =>
+            navigator.serviceWorker.register('serviceWorker.js')
+              .then(registration => console.log('Service Worker registered'))
+              .catch(err => 'SW registration failed'));
+}
+      </script>
     </body>
-    <noscript>Your browser does not support JavaScript!</noscript>
+    <noscript>Your browser does not support JavaScript! Please enable JavaScript and refresh.</noscript>
 </html>

@@ -21,6 +21,7 @@
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.7",
     "bootstrap-jquery": "^3.3.2",
+    "bootstrap-sass": "^3.3.7",
     "browserify": "^13.0.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",

@@ -39,7 +39,7 @@ var LoginForm = React.createClass({
                                     <input 
                                         type="text" 
                                         className="form-control" 
-                                        id="inputUserName" 
+                                        id="inputLoginUserName" 
                                         placeholder="email" 
                                         name="email" 
                                         onChange={this.handleEmail}
@@ -52,7 +52,7 @@ var LoginForm = React.createClass({
                                     <input 
                                         type="password" 
                                         className="form-control" 
-                                        id="inputPassword" 
+                                        id="inputLoginPassword" 
                                         placeholder="Password" 
                                         name="password" 
                                         onChange={this.handlePassword}

@@ -50124,7 +50124,7 @@ var LoginForm = _react2.default.createClass({
                                 _react2.default.createElement('input', {
                                     type: 'text',
                                     className: 'form-control',
-                                    id: 'inputUserName',
+                                    id: 'inputLoginUserName',
                                     placeholder: 'email',
                                     name: 'email',
                                     onChange: this.handleEmail,
@@ -50141,7 +50141,7 @@ var LoginForm = _react2.default.createClass({
                                 _react2.default.createElement('input', {
                                     type: 'password',
                                     className: 'form-control',
-                                    id: 'inputPassword',
+                                    id: 'inputLoginPassword',
                                     placeholder: 'Password',
                                     name: 'password',
                                     onChange: this.handlePassword,
@@ -50432,7 +50432,7 @@ var RegistrationForm = _react2.default.createClass({
                                 _react2.default.createElement('input', {
                                     type: 'text',
                                     className: 'form-control',
-                                    id: 'inputUserName',
+                                    id: 'inputRegisterUserName',
                                     placeholder: 'username',
                                     name: 'username',
                                     onChange: this.handleUserName,
@@ -50449,7 +50449,7 @@ var RegistrationForm = _react2.default.createClass({
                                 _react2.default.createElement('input', {
                                     type: 'email',
                                     className: 'form-control',
-                                    id: 'inputEmail',
+                                    id: 'inputRegisterEmail',
                                     placeholder: 'Email',
                                     name: 'email',
                                     onChange: this.handleEmail,
@@ -50466,7 +50466,7 @@ var RegistrationForm = _react2.default.createClass({
                                 _react2.default.createElement('input', {
                                     type: 'password',
                                     className: 'form-control',
-                                    id: 'inputPassword',
+                                    id: 'inputRegisterPassword',
                                     placeholder: 'Password',
                                     name: 'password',
                                     onChange: this.handlePassword,
