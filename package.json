@@ -2,6 +2,9 @@
   "name": "CitationAppRedux",
   "version": "0.0.0",
   "description": "An attempt to create a simple template for React applications with Authentiction.",
+  "engines": {
+    "node": "6.x"
+  },
   "main": "server.js",
   "repository": "https://github.com/jeremylshepherd/citation_tracker",
   "author": "Jeremy L. Shepherd <jeremylshepherd@gmail.com>",
