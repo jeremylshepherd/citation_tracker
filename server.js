@@ -23,7 +23,7 @@ var routes = require('./routes/index');
 mongoose.connect(process.env.MONGODB_URI, function(err, db) {
   if(err) {console.log(err);}
 
-  console.log(`Connected to ${process.env.MONGODB_URI}`);
+  console.log(`Connected to GHSPD Citations DB`);
 });
 
 app.set('view engine', 'ejs');

@@ -1,7 +1,7 @@
 {
   "name": "CitationAppRedux",
   "version": "0.0.0",
-  "description": "An attempt to create a simple template for React applications with Authentiction.",
+  "description": "A citation tracking application for the GSHPD.",
   "engines": {
     "node": "6.x"
   },
