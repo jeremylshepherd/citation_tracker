@@ -34,7 +34,7 @@
     "express": "^4.14.0",
     "express-flash": "0.0.2",
     "express-session": "^1.14.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-babel": "^6.1.2",
     "gulp-reactify": "^3.0.1",
     "gulp-sass": "^2.3.2",
